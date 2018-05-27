@@ -1,8 +1,14 @@
 package mapreduce
 
 import (
+	"encoding/json"
+	"fmt"
 	"hash/fnv"
+	"io/ioutil"
+	"os"
 )
+
+var err error
 
 func doMap(
 	jobName string, // the name of the MapReduce job
@@ -11,7 +17,49 @@ func doMap(
 	nReduce int, // the number of reduce task that will be run ("R" in the paper)
 	mapF func(filename string, contents string) []KeyValue,
 ) {
+	// create interm. files: reduceName(jobName, mapTask, 0...nReduce-1)
+	//   TODO: learn to write empty files (ioutil, os packages)
+
+	encoders := make([]*json.Encoder, nReduce)
+	for i := 0; i < nReduce; i++ {
+		// creates empty file
+		filename := reduceName(jobName, mapTask, i)
+		file, err := os.Create(filename)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(file)
+		// create encoder for file
+		encoders[i] = json.NewEncoder(file)
+		defer file.Close()
+	}
+
+	// read inFile
+	inputBytes, err := ioutil.ReadFile(inFile)
+	if err != nil {
+		panic(err)
+	}
+	input := string(inputBytes)
+
+	// call mapF on contents of inFile
+	result := mapF(inFile, input) // is a list of KeyValue
+
+	// split result of mapF according to hashes of keys
+	for _, kv := range result {
+		reduceTaskID := ihash(kv.Key) % nReduce
+		err := encoders[reduceTaskID].Encode(&kv)
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	//
+	// write result to corresp. interm. file
+	//    enc := json.NewEncoder(file)
+	//    for _, kv := ... {
+	//      err := enc.Encode(&kv)
+	//   close all files!
+
 	// doMap manages one map task: it should read one of the input files
 	// (inFile), call the user-defined map function (mapF) for that file's
 	// contents, and partition mapF's output into nReduce intermediate files.

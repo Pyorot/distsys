@@ -1,0 +1,19 @@
+Sequential first
+
+  each input file is one map task
+  doMap called at least ocne per map task
+  doReduce called at least once per reduce task
+
+doMap:
+  reads its input file
+  calls map fn on its contents
+  writes result (dict format) to intermediate files (nReduce of them)
+  hashes each key to pick intermediate file to assign to
+  (divides up output of map task)
+
+doReduce:
+  calls reduce fn on each key in its corresp. intermediate files
+  produces nReduce result files
+  (gathers inputs for a reduce task)
+
+THEN merge is called to merge all nReduce result files into single output
