@@ -8,12 +8,12 @@
             "name": "Launch",
             "type": "go",
             "request": "launch",
-            "mode": "debug",
+            "mode": "test",
             "remotePath": "",
             "port": 2345,
             "host": "127.0.0.1",
-            "program": "${fileDirname}",
-            "env": {},
+            "program": "C:/Users/Filip Masic/Documents/DS",
+            "env": {"GOPATH": "/c/Users/Filip Masic/Documents/DS"},
             "args": [],
             "showLog": true
         }

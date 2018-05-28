@@ -2,7 +2,6 @@ package mapreduce
 
 import (
 	"encoding/json"
-	"fmt"
 	"hash/fnv"
 	"io/ioutil"
 	"os"
@@ -21,16 +20,15 @@ func doMap(
 	//   TODO: learn to write empty files (ioutil, os packages)
 
 	encoders := make([]*json.Encoder, nReduce)
-	for i := 0; i < nReduce; i++ {
+	for r := 0; r < nReduce; r++ {
 		// creates empty file
-		filename := reduceName(jobName, mapTask, i)
+		filename := reduceName(jobName, mapTask, r)
 		file, err := os.Create(filename)
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(file)
 		// create encoder for file
-		encoders[i] = json.NewEncoder(file)
+		encoders[r] = json.NewEncoder(file)
 		defer file.Close()
 	}
 
