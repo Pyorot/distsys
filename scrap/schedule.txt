@@ -1,0 +1,15 @@
+ > TODO SOBRE schedule()
+call:
+master calls it twice per job: map phase; reduce phase
+
+purpose: hands out tasks to available workers
+
+ outline:
+gives each worker a sequence of tasks *one at a time*
+returns when all tasks have completed
+
+ find workers:
+learns about available workers via registerChan arg, which yields a string for each worker containing its RPC address (registerChan registers workers independently of schedule()).
+
+ send commands:
+sends execute-task command to worker = Worker.DoTask RPC. Args in DoTaskArgs struct (common_rpc.go); File is map task input filename (not used by reduce) (mapFiles).
