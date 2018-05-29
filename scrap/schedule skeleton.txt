@@ -1,0 +1,21 @@
+inputFiles (for map task)
+taskQueue = [0...ntasks-1]
+
+freeChan chan (of type type(registerChan)) registers workers currently idle
+
+  main thread:
+while taskQueue not empty:
+freeChan-> [thread] -> calls go do(task, worker) for:
+- task = taskQueue.pop()
+- worker <- freeChan 
+
+  go register() thread:
+registerChan -> [thread] -> freeChan
+
+  go do(task, worker) (on a new thread):
+- DoTask RPC sent to worker with task 
+- await response from RPC
+- if success: pass worker back to freeChan
+  else: taskQueue.push(task)
+
+now.... IMPLEMENT DAT!

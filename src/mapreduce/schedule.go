@@ -12,6 +12,7 @@ import "fmt"
 // existing registered workers (if any) and new ones as they register.
 //
 func schedule(jobName string, mapFiles []string, nReduce int, phase jobPhase, registerChan chan string) {
+	fmt.Println("are we live?")
 	var ntasks int
 	var nOther int // number of inputs (for reduce) or outputs (for map)
 	switch phase { // nMap = len(mapFiles)
@@ -23,12 +24,57 @@ func schedule(jobName string, mapFiles []string, nReduce int, phase jobPhase, re
 		nOther = len(mapFiles)
 	}
 
-	fmt.Printf("Schedule: %v %v tasks (%d I/Os)\n", ntasks, phase, nOther)
-
 	// All ntasks tasks have to be scheduled on workers. Once all tasks
 	// have completed successfully, schedule() should return.
-	//
+
+	fmt.Printf("Schedule start: %v %v tasks (%d I/Os)\n", ntasks, phase, nOther)
 	// Your code here (Part III, Part IV).
-	//
-	fmt.Printf("Schedule: %v done\n", phase)
+	// Call signature: jobName, mapFiles, ntasks, nOther, phase, registerChan
+	freeChan := make(chan string)
+	go forward(registerChan, freeChan)
+
+	idleTasks := make(chan int, ntasks)
+	doneTasks := make(chan int)
+	doneCounter := 0
+	for i := 0; i < ntasks; i++ {
+		idleTasks <- i
+	}
+
+	for {
+		select {
+		case worker := <-freeChan:
+			task := <-idleTasks
+			taskArgs := DoTaskArgs{
+				JobName:       jobName,
+				Phase:         phase,
+				TaskNumber:    task,
+				NumOtherPhase: nOther,
+			}
+			if phase == "mapPhase" {
+				taskArgs.File = mapFiles[task]
+			}
+			go do(task, worker, &taskArgs, freeChan, idleTasks)
+		case <-doneTasks:
+			doneCounter++
+			if doneCounter == ntasks {
+				break
+			}
+		}
+	}
+
+	fmt.Printf("Schedule finish: %v done\n", phase)
+}
+
+func forward(a chan string, b chan string) {
+	for {
+		b <- <-a
+	}
+}
+
+func do(task int, worker string, taskArgs *DoTaskArgs, freeChan chan string, idleTasks chan int) {
+	if call(worker, "Worker.DoTask", taskArgs, nil) {
+		freeChan <- worker
+	} else {
+		idleTasks <- task
+	}
 }
