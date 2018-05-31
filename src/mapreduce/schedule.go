@@ -12,7 +12,6 @@ import "fmt"
 // existing registered workers (if any) and new ones as they register.
 //
 func schedule(jobName string, mapFiles []string, nReduce int, phase jobPhase, registerChan chan string) {
-	fmt.Println("are we live?")
 	var ntasks int
 	var nOther int // number of inputs (for reduce) or outputs (for map)
 	switch phase { // nMap = len(mapFiles)
@@ -30,8 +29,13 @@ func schedule(jobName string, mapFiles []string, nReduce int, phase jobPhase, re
 	fmt.Printf("Schedule start: %v %v tasks (%d I/Os)\n", ntasks, phase, nOther)
 	// Your code here (Part III, Part IV).
 	// Call signature: jobName, mapFiles, ntasks, nOther, phase, registerChan
-	freeChan := make(chan string)
-	go forward(registerChan, freeChan)
+	// ID conventions: workers by address (string); tasks by ID (int)
+	idleWorkers := make(chan string)
+	go func() { // forwards registerChan to idleWorkers
+		for {
+			idleWorkers <- <-registerChan
+		}
+	}()
 
 	idleTasks := make(chan int, ntasks)
 	doneTasks := make(chan int)
@@ -42,8 +46,8 @@ func schedule(jobName string, mapFiles []string, nReduce int, phase jobPhase, re
 
 	for {
 		select {
-		case worker := <-freeChan:
-			task := <-idleTasks
+		case task := <-idleTasks:
+			worker := <-idleWorkers
 			taskArgs := DoTaskArgs{
 				JobName:       jobName,
 				Phase:         phase,
@@ -53,27 +57,23 @@ func schedule(jobName string, mapFiles []string, nReduce int, phase jobPhase, re
 			if phase == "mapPhase" {
 				taskArgs.File = mapFiles[task]
 			}
-			go do(task, worker, &taskArgs, freeChan, idleTasks)
+			go do(task, worker, &taskArgs, idleWorkers, idleTasks, doneTasks)
 		case <-doneTasks:
 			doneCounter++
 			if doneCounter == ntasks {
-				break
+				fmt.Printf("Schedule finish: %v done\n", phase)
+				return
 			}
 		}
 	}
-
-	fmt.Printf("Schedule finish: %v done\n", phase)
 }
 
-func forward(a chan string, b chan string) {
-	for {
-		b <- <-a
-	}
-}
-
-func do(task int, worker string, taskArgs *DoTaskArgs, freeChan chan string, idleTasks chan int) {
+func do(task int, worker string, taskArgs *DoTaskArgs, idleWorkers chan string, idleTasks chan int, doneTasks chan int) {
 	if call(worker, "Worker.DoTask", taskArgs, nil) {
-		freeChan <- worker
+		go func() { // idleWorkers only consumed if idleTasks consumed so this must not block
+			idleWorkers <- worker
+		}()
+		doneTasks <- task
 	} else {
 		idleTasks <- task
 	}
