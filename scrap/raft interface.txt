@@ -1,0 +1,22 @@
+  Interface:
+Make creates a new Raft server instance
+Make(
+  peers		array of network identifiers including self (used by labrpc)
+  me		index of self in peers
+  persister	[later]
+  applyCh	channel to receive ApplyMsgs (for each newly-committed log entry)
+
+Starts consensus on new log entry [returns immediately]
+Start(command)
+
+GetState() returns term+isLeader without running Start
+
+ApplyMsg type
+
+example RPC code in raft.go:
+sendRequestVote (sends RPC)
+RequestVote (handles incoming RPC)
+
+assert for each newly-committed log entry:
+- something sends an ApplyMsg to the applyCh as specified in Make
+- every peer sends an ApplyMsg to the service/testr 

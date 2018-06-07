@@ -1,0 +1,13 @@
+  Index of raft.go:
+ApplyMsg	  struct
+Raft		  struct ABC
+GetState	  func	 A
+persist		  func	   C
+readPersist	  func	   C
+RequestVoteArgs   struct AB
+RequestVoteReply  struct A
+RequestVote	  func	 AB
+sendRequestVote	  func
+Start		  func	  B
+Kill		  func	 ???
+Make		  func	 ABC

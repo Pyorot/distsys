@@ -1,3 +1,3 @@
 export "GOPATH=$PWD"
-cd "$GOPATH/src/mapreduce"
+cd "$GOPATH/src/raft"
 echo "GOPATH = $GOPATH"
