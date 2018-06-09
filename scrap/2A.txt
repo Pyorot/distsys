@@ -1,0 +1,23 @@
+2A
++ Leader Election
++ Heartbeats
+
+heartbeat = empty AppendEntry RPC
+  leader assertions:
+- single leader is elected
+- new leader takes over iff old leader fails or if packets to/from old leader are lost
+
+  store:
+- state vars in Raft struct
+- define new struct to hold info per log entry
+
+  do RPC structs/func:
+RequestVoteArgs RequestVoteReply
+RequestVote() [handles RPC] so that servers will vote for one another
+
+  Make:
+- add background goroutine to start leader election by sending RequestVote RPC when it hasn't heard from another peer for a while. thus learns who is leader or become as leader
+
+  heartbeats:
+- leader sends out empty AppendEntries RPCs periodically. write handler for this RPC that resets election timeout. heartbeat timeout -> new leader election (leaders stepping forward)
+no timeout -> no peer steps forward as new leader

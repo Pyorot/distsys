@@ -19,4 +19,5 @@ RequestVote (handles incoming RPC)
 
 assert for each newly-committed log entry:
 - something sends an ApplyMsg to the applyCh as specified in Make
-- every peer sends an ApplyMsg to the service/testr 
+- every peer sends an ApplyMsg to the service/testr
+> ERGO every peer sends an ApplyMsg to applyCh (which forwards to the service) [I think]
