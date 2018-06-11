@@ -1,0 +1,18 @@
+3.) implement candidacy timeout + call election in Make()
+
+timeout := rand.Intn(650 - 500) + 500
+
+ -> sleep -> event
+^     |
+|     V
+ <- interrupt
+
+for {
+    select {
+        case <-interrupt:
+            break
+        case <-time.After(timeout):
+            do thing
+	    return
+        }
+}
