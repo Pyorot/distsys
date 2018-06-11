@@ -19,8 +19,11 @@ package raft
 
 import "sync"
 import "labrpc"
-import "math/rand"
 import "time"
+import "fmt"
+
+// P ...
+var P = fmt.Println // func() {}
 
 // import "bytes"
 // import "labgob"
@@ -85,7 +88,7 @@ func (rf *Raft) GetState() (int, bool) {
 	// Your code here (2A).
 	rf.mu.Lock()
 	term = rf.currentTerm
-	isleader = rf.phase == "Leader"
+	isleader = rf.phase == "leader"
 	rf.mu.Unlock()
 	return term, isleader
 }
@@ -130,119 +133,6 @@ func (rf *Raft) readPersist(data []byte) {
 	// }
 }
 
-// REQUESTVOTE RPC
-
-// RequestVoteArgs ...
-// example RequestVote RPC arguments structure.
-// field names must start with capital letters!
-//
-type RequestVoteArgs struct {
-	// Your data here (2A, 2B).
-	Term         int
-	CandidateID  int
-	LastLogIndex int
-	LastLogTerm  int
-}
-
-// RequestVoteReply ...
-// example RequestVote RPC reply structure.
-// field names must start with capital letters!
-//
-type RequestVoteReply struct {
-	// Your data here (2A).
-	Term        int
-	VoteGranted bool
-}
-
-// RequestVote ...
-// example RequestVote RPC handler.
-//
-func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
-	// Your code here (2A, 2B).
-	rf.mu.Lock()
-	reply.Term = rf.currentTerm
-	// term sync
-	if rf.currentTerm < args.Term {
-		// rf.currentTerm = args.Term
-		// go initFollower()
-	}
-	// payload
-	if rf.currentTerm <= args.Term && (rf.votedFor == -1 || rf.votedFor == args.CandidateID) {
-		// vote should also depend on log updated-ness (tbd in Part B)
-		reply.VoteGranted = true
-		rf.votedFor = args.CandidateID
-	}
-	rf.mu.Unlock()
-}
-
-// sendRequestVote ...
-// example code to send a RequestVote RPC to a server.
-// server is the index of the target server in rf.peers[].
-// expects RPC arguments in args.
-// fills in *reply with RPC reply, so caller should
-// pass &reply.
-// the types of the args and reply passed to Call() must be
-// the same as the types of the arguments declared in the
-// handler function (including whether they are pointers).
-//
-// The labrpc package simulates a lossy network, in which servers
-// may be unreachable, and in which requests and replies may be lost.
-// Call() sends a request and waits for a reply. If a reply arrives
-// within a timeout interval, Call() returns true; otherwise
-// Call() returns false. Thus Call() may not return for a while.
-// A false return can be caused by a dead server, a live server that
-// can't be reached, a lost request, or a lost reply.
-//
-// Call() is guaranteed to return (perhaps after a delay) *except* if the
-// handler function on the server side does not return.  Thus there
-// is no need to implement your own timeouts around Call().
-//
-// look at the comments in ../labrpc/labrpc.go for more details.
-//
-// if you're having trouble getting RPC to work, check that you've
-// capitalized all field names in structs passed over RPC, and
-// that the caller passes the address of the reply struct with &, not
-// the struct itself.
-//
-func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply) bool {
-	ok := rf.peers[server].Call("Raft.RequestVote", args, reply)
-	return ok
-}
-
-// APPLYENTRIES RPC
-
-// AppendEntriesArgs ...
-type AppendEntriesArgs struct {
-	Term         int
-	LeaderID     int
-	PrevLogIndex int
-	PrevLogTerm  int
-	entries      []string
-	leaderCommit int
-}
-
-// AppendEntriesReply ...
-type AppendEntriesReply struct {
-	Term    int
-	Success bool
-}
-
-// AppendEntries ...
-func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
-	rf.mu.Lock()
-	reply.Term = rf.currentTerm
-	go func() { electionReset <- true }()
-	if rf.currentTerm <= args.Term {
-		reply.Success = true
-	}
-	rf.mu.Unlock()
-}
-
-// sendAppendEntries ...
-func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *AppendEntriesReply) bool {
-	return rf.peers[server].Call("Raft.AppendEntries", args, reply)
-}
-
 // START, KILL, MAKE
 
 // Start ...
@@ -277,6 +167,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 //
 func (rf *Raft) Kill() {
 	// Your code here, if desired.
+	P = func(...interface{}) (a int, b error) { return }
 }
 
 // Make ...
@@ -292,6 +183,7 @@ func (rf *Raft) Kill() {
 //
 func Make(peers []*labrpc.ClientEnd, me int,
 	persister *Persister, applyCh chan ApplyMsg) *Raft {
+	P = fmt.Println
 	rf := &Raft{}
 	rf.peers = peers
 	rf.persister = persister
@@ -305,81 +197,4 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.readPersist(persister.ReadRaftState())
 
 	return rf
-}
-
-// CUSTOM
-
-func (rf *Raft) initLeader() {
-	rf.mu.Lock()
-	rf.phase = "leader"
-	rf.mu.Unlock()
-	rf.heartbeat()
-}
-
-func (rf *Raft) heartbeat() {
-	for ID := 0; ID < len(rf.peers); ID++ {
-		if ID != rf.me {
-			rf.sendAppendEntries(ID, &AppendEntriesArgs{}, &AppendEntriesReply{})
-		}
-	}
-	time.Sleep(heartbeatTimeout)
-	var phase string
-	rf.mu.Lock()
-	phase = rf.phase
-	rf.mu.Unlock()
-	if phase == "leader" {
-		rf.heartbeat()
-	}
-}
-
-func (rf *Raft) initFollower() {
-	rf.mu.Lock()
-	rf.phase = "follower"
-	rf.mu.Unlock()
-	// election timeout
-	for { // or make tail-recursive
-		select {
-		case <-electionReset:
-			break
-		case <-time.After((time.Duration(rand.Intn(electionRandomisation)) + electionTimeout) * time.Millisecond):
-			go rf.initCandidate()
-			return
-		}
-	}
-}
-
-func (rf *Raft) initCandidate() {
-	rf.mu.Lock()
-	rf.phase = "candidate"
-	rf.currentTerm++
-	votes := make(chan bool, len(rf.peers))
-	voteCount := 0
-	// request votes via RequestVote RPC
-	replies := make([]RequestVoteReply, len(rf.peers)) // pointers?
-	for ID := 0; ID < len(rf.peers); ID++ {
-		if ID == rf.me {
-			votes <- true
-		} else {
-			args := RequestVoteArgs{Term: rf.currentTerm, CandidateID: rf.me}
-			go rf.sendRequestVote(ID, &args, &replies[ID])
-		}
-	}
-	rf.mu.Unlock()
-	// await votes
-	for i := 0; i < len(rf.peers); i++ {
-		select {
-		case vote := <-votes:
-			if vote {
-				voteCount++
-			}
-		case <-electionReset:
-			rf.initFollower()
-			return
-		}
-	}
-	if voteCount >= len(rf.peers)/2 {
-		go rf.initLeader()
-	} else {
-		go rf.initCandidate()
-	}
 }
