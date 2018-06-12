@@ -1,6 +1,6 @@
 package raft
 
-// APPLYENTRIES RPC
+// APPENDENTRIES RPC
 
 // AppendEntriesArgs ...
 type AppendEntriesArgs struct {
@@ -21,20 +21,22 @@ type AppendEntriesReply struct {
 // AppendEntries ...
 func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
 	rf.mu.Lock()
-	go func() { electionReset <- true }()
 	// rpc term sync
 	if rf.currentTerm < args.Term {
 		rf.currentTerm = args.Term
 		rf.votedFor = -1
-		// go rf.initFollower()
+		rf.mu.Unlock()
+		P(rf.me, "follower | term sync fail (AppendEntries receiver)")
+		rf.phaseChange("follower", false)
+		rf.mu.Lock()
 	}
-	// payload
 	if rf.currentTerm <= args.Term {
+		go func() { electionReset <- true }()
 		reply.Success = true
 	}
+	// payload
 	reply.Term = rf.currentTerm
-	P("AppendEntries:", args.LeaderID, "<", rf.me, "|", reply.Success)
-	go rf.initFollower()
+	P("AppendEntries:", args.LeaderID, "<", rf.me, "|", rf.currentTerm, "|", reply.Success)
 	rf.mu.Unlock()
 }
 
@@ -44,11 +46,14 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 	ok := rf.peers[server].Call("Raft.AppendEntries", args, reply)
 	// rpc term sync
 	rf.mu.Lock()
-	defer rf.mu.Unlock()
 	if rf.currentTerm < reply.Term {
 		rf.currentTerm = reply.Term
 		rf.votedFor = -1
-		go rf.initFollower()
+		rf.mu.Unlock()
+		P(rf.me, "follower | term sync fail (AppendEntries sender)")
+		rf.phaseChange("follower", false)
+	} else {
+		rf.mu.Unlock()
 	}
 	return ok
 }

@@ -30,12 +30,17 @@ type RequestVoteReply struct {
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// Your code here (2A, 2B).
 	rf.mu.Lock()
-	defer rf.mu.Unlock()
 	// rpc term sync
 	if rf.currentTerm < args.Term {
 		rf.currentTerm = args.Term
 		rf.votedFor = -1
-		go rf.initFollower()
+		rf.mu.Unlock()
+		P(rf.me, "follower | term sync fail (RequestVote receiver)")
+		rf.phaseChange("follower", false)
+		rf.mu.Lock()
+	}
+	if rf.currentTerm <= args.Term {
+		go func() { electionReset <- true }()
 	}
 	// payload
 	if rf.currentTerm <= args.Term && (rf.votedFor == -1 || rf.votedFor == args.CandidateID) {
@@ -44,7 +49,8 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		rf.votedFor = args.CandidateID
 	}
 	reply.Term = rf.currentTerm
-	P("RequestVote:", args.CandidateID, "<", rf.me, "|", reply.VoteGranted)
+	P("RequestVote:", args.CandidateID, "<", rf.me, "|", rf.currentTerm, "|", reply.VoteGranted)
+	rf.mu.Unlock()
 }
 
 // sendRequestVote ...
@@ -82,11 +88,14 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 	doneCh <- reply.VoteGranted // could deadlock
 	// rpc term sync
 	rf.mu.Lock()
-	defer rf.mu.Unlock()
 	if rf.currentTerm < reply.Term {
 		rf.currentTerm = reply.Term
 		rf.votedFor = -1
-		go rf.initFollower()
+		rf.mu.Unlock()
+		P(rf.me, "follower | term sync fail (RequestVote sender)")
+		rf.phaseChange("follower", false)
+	} else {
+		rf.mu.Unlock()
 	}
 	return ok
 }

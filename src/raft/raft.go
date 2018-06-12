@@ -191,7 +191,8 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	// Your initialization code here (2A, 2B, 2C).
 	rf.votedFor = -1
-	go rf.initFollower()
+	P(rf.me, "follower | init")
+	rf.phaseChange("follower", false)
 
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())
