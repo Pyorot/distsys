@@ -20,13 +20,17 @@ package raft
 import "sync"
 import "labrpc"
 import "time"
-import "fmt"
 
-// P ...
-var P = fmt.Println // func() {}
+/* P ...
+var P = func(...interface{}) (int, error) {
+	var err error
+	return 0, err
+} */
+
+// var P = fmt.Println
 
 // import "bytes"
-// import "labgob"
+// import "labgob"s
 
 // ApplyMsg ...
 // as each Raft peer becomes aware that successive log entries are
@@ -167,7 +171,6 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 //
 func (rf *Raft) Kill() {
 	// Your code here, if desired.
-	P = func(...interface{}) (a int, b error) { return }
 }
 
 // Make ...
@@ -183,7 +186,6 @@ func (rf *Raft) Kill() {
 //
 func Make(peers []*labrpc.ClientEnd, me int,
 	persister *Persister, applyCh chan ApplyMsg) *Raft {
-	P = fmt.Println
 	rf := &Raft{}
 	rf.peers = peers
 	rf.persister = persister

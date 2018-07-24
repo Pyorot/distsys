@@ -83,7 +83,7 @@ func TestReElection2A2(t *testing.T) {
 	cfg.end()
 }
 
-func TestBasicAgree2B(t *testing.T) {
+func TestBasicAgree2B1(t *testing.T) {
 	servers := 5
 	cfg := makeConfig(t, servers, false)
 	defer cfg.cleanup()
@@ -106,7 +106,7 @@ func TestBasicAgree2B(t *testing.T) {
 	cfg.end()
 }
 
-func TestFailAgree2B(t *testing.T) {
+func TestFailAgree2B2(t *testing.T) {
 	servers := 3
 	cfg := makeConfig(t, servers, false)
 	defer cfg.cleanup()
@@ -137,7 +137,7 @@ func TestFailAgree2B(t *testing.T) {
 	cfg.end()
 }
 
-func TestFailNoAgree2B(t *testing.T) {
+func TestFailNoAgree2B3(t *testing.T) {
 	servers := 5
 	cfg := makeConfig(t, servers, false)
 	defer cfg.cleanup()
@@ -188,7 +188,7 @@ func TestFailNoAgree2B(t *testing.T) {
 	cfg.end()
 }
 
-func TestConcurrentStarts2B(t *testing.T) {
+func TestConcurrentStarts2B4(t *testing.T) {
 	servers := 3
 	cfg := makeConfig(t, servers, false)
 	defer cfg.cleanup()
@@ -289,7 +289,7 @@ loop:
 	cfg.end()
 }
 
-func TestRejoin2B(t *testing.T) {
+func TestRejoin2B5(t *testing.T) {
 	servers := 3
 	cfg := makeConfig(t, servers, false)
 	defer cfg.cleanup()
@@ -327,7 +327,7 @@ func TestRejoin2B(t *testing.T) {
 	cfg.end()
 }
 
-func TestBackup2B(t *testing.T) {
+func TestBackup2B6(t *testing.T) {
 	servers := 5
 	cfg := makeConfig(t, servers, false)
 	defer cfg.cleanup()
@@ -399,7 +399,7 @@ func TestBackup2B(t *testing.T) {
 	cfg.end()
 }
 
-func TestCount2B(t *testing.T) {
+func TestCount2B7(t *testing.T) {
 	servers := 3
 	cfg := makeConfig(t, servers, false)
 	defer cfg.cleanup()
@@ -509,7 +509,7 @@ loop:
 	cfg.end()
 }
 
-func TestPersist12C(t *testing.T) {
+func TestPersist12C1(t *testing.T) {
 	servers := 3
 	cfg := makeConfig(t, servers, false)
 	defer cfg.cleanup()
@@ -555,7 +555,7 @@ func TestPersist12C(t *testing.T) {
 	cfg.end()
 }
 
-func TestPersist22C(t *testing.T) {
+func TestPersist22C2(t *testing.T) {
 	servers := 5
 	cfg := makeConfig(t, servers, false)
 	defer cfg.cleanup()
@@ -601,7 +601,7 @@ func TestPersist22C(t *testing.T) {
 	cfg.end()
 }
 
-func TestPersist32C(t *testing.T) {
+func TestPersist32C3(t *testing.T) {
 	servers := 3
 	cfg := makeConfig(t, servers, false)
 	defer cfg.cleanup()
@@ -641,7 +641,7 @@ func TestPersist32C(t *testing.T) {
 // The leader in a new term may try to finish replicating log entries that
 // haven't been committed yet.
 //
-func TestFigure82C(t *testing.T) {
+func TestFigure82C4(t *testing.T) {
 	servers := 5
 	cfg := makeConfig(t, servers, false)
 	defer cfg.cleanup()
@@ -697,7 +697,7 @@ func TestFigure82C(t *testing.T) {
 	cfg.end()
 }
 
-func TestUnreliableAgree2C(t *testing.T) {
+func TestUnreliableAgree2C5(t *testing.T) {
 	servers := 5
 	cfg := makeConfig(t, servers, true)
 	defer cfg.cleanup()
@@ -726,7 +726,7 @@ func TestUnreliableAgree2C(t *testing.T) {
 	cfg.end()
 }
 
-func TestFigure8Unreliable2C(t *testing.T) {
+func TestFigure8Unreliable2C6(t *testing.T) {
 	servers := 5
 	cfg := makeConfig(t, servers, true)
 	defer cfg.cleanup()
@@ -926,10 +926,10 @@ func internalChurn(t *testing.T, unreliable bool) {
 	cfg.end()
 }
 
-func TestReliableChurn2C(t *testing.T) {
+func TestReliableChurn2C7(t *testing.T) {
 	internalChurn(t, false)
 }
 
-func TestUnreliableChurn2C(t *testing.T) {
+func TestUnreliableChurn2C8(t *testing.T) {
 	internalChurn(t, true)
 }

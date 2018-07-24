@@ -18,58 +18,66 @@ func (rf *Raft) initCandidate() {
 
 func (rf *Raft) heartbeat() {
 	rf.mu.Lock()
+	// leader check
 	if rf.phase != "leader" {
-		P(rf.me, "[exit] leader")
+		P(rf.me, "x leader")
 		rf.mu.Unlock()
 		return
 	}
+	// send heartbeats
 	for ID := 0; ID < len(rf.peers); ID++ {
 		if ID != rf.me {
 			args := AppendEntriesArgs{Term: rf.currentTerm, LeaderID: rf.me}
 			go rf.sendAppendEntries(ID, &args, &AppendEntriesReply{})
 		}
 	}
+
 	rf.mu.Unlock()
+	// heartbeat timeout
 	time.Sleep(heartbeatTimeout)
+	// recurse
 	rf.heartbeat()
 }
 
 func (rf *Raft) awaitElection() {
 	rf.mu.Lock()
+	// follower check
 	if rf.phase != "follower" {
-		P(rf.me, "[exit] follower")
+		P(rf.me, "x follower")
 		rf.mu.Unlock()
 		return
 	}
 	rf.mu.Unlock()
+	// continue after election timeout (recurse or > candidate)
 	timeout := (time.Duration(rand.Intn(electionRandomisation)) * time.Millisecond) + electionTimeout
 	select {
 	case <-electionReset:
-		P(rf.me, "(follower) | reset")
+		P(rf.me, "- follower | reset")
 		go rf.awaitElection()
 	case <-time.After(timeout):
-		P(rf.me, "candidate | timeout")
+		P(rf.me, "→ candidate | timeout")
 		rf.phaseChange("candidate", false)
-		P(rf.me, "[exit] follower")
+		P(rf.me, "x follower")
 	}
 }
 
 func (rf *Raft) callElection() {
-	var term int
 	rf.mu.Lock()
+	// candidate check
 	if rf.phase != "candidate" {
 		rf.mu.Unlock()
-		P(rf.me, "[exit] candidate")
+		P(rf.me, "x candidate | check 1")
 		return
 	}
+	// set up vote
 	rf.currentTerm++
-	term = rf.currentTerm
+	term := rf.currentTerm
 	rf.mu.Unlock()
 	votes := make(chan bool, len(rf.peers))
 	voteCount := 0
 	majority := int(math.Ceil(float64(len(rf.peers)) / 2))
 	// request votes via RequestVote RPC
-	replies := make([]RequestVoteReply, len(rf.peers)) // pointers?
+	replies := make([]RequestVoteReply, len(rf.peers))
 	for ID := 0; ID < len(rf.peers); ID++ {
 		if ID == rf.me {
 			votes <- true
@@ -81,41 +89,42 @@ func (rf *Raft) callElection() {
 	P(rf.me, "requested votes")
 	// await votes
 	for i := 0; i < len(rf.peers); i++ {
-		if voteCount >= majority {
-			break
-		}
 		select {
 		case vote := <-votes:
 			if vote {
 				voteCount++
 			}
 		case <-electionReset:
-			P(rf.me, "follower | vote interrupt")
+			P(rf.me, "→ follower | vote interrupt")
 			rf.phaseChange("follower", false)
-			P(rf.me, "[exit] candidate")
+			P(rf.me, "x candidate")
 			return
+		}
+		if voteCount >= majority {
+			break
 		}
 	}
 	P(rf.me, "received votes")
-	// vote count and decision
 	rf.mu.Lock()
-	if rf.phase == "candidate" && voteCount >= majority {
-		P(rf.me, "leader | elected:", voteCount, "votes")
+	// candidate check 2
+	if rf.phase != "candidate" {
 		rf.mu.Unlock()
-		P(rf.me, "[exit] candidate")
+		P(rf.me, "x candidate | check 2")
+		return
+	}
+	rf.mu.Unlock()
+	// continue
+	if voteCount >= majority {
+		P(rf.me, "→ leader | elected:", voteCount, "votes")
 		rf.phaseChange("leader", true)
+		P(rf.me, "x candidate")
 	} else {
-		if rf.phase == "candidate" {
-			P(rf.me, "(candid) | lost vote")
-		} else {
-			P(rf.me, "(candid) | lost candidacy")
-		}
-		rf.mu.Unlock()
+		P(rf.me, "- candidate | lost vote")
 		go rf.callElection()
 	}
 }
 
-func (rf *Raft) phaseChange(toPhase string, sync bool) bool {
+func (rf *Raft) phaseChange(toPhase string, sync bool) (success bool) {
 	initPhase := map[string]func(){
 		"leader":    rf.initLeader,
 		"follower":  rf.initFollower,
