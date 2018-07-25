@@ -1,6 +1,0 @@
-1. term logging for every RPC
-2. guarantees for votes to be synced with terms
-
-fix outline:
-- what can trigger an election timeout reset?
-  > every RPC where the other is up-to-date

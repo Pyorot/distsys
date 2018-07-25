@@ -15,45 +15,30 @@ type AppendEntriesArgs struct {
 // AppendEntriesReply ...
 type AppendEntriesReply struct {
 	Term    int
-	Success bool
+	Success bool // is sender up-to-date?
 }
 
 // AppendEntries ...
 func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
-	rf.mu.Lock()
-	// rpc term sync
-	if rf.currentTerm < args.Term {
-		rf.currentTerm = args.Term
-		rf.votedFor = -1
-		rf.mu.Unlock()
-		P(rf.me, "follower | term sync fail (AppendEntries receiver)")
-		rf.phaseChange("follower", false)
-		rf.mu.Lock()
-	}
-	if rf.currentTerm <= args.Term {
-		go func() { electionReset <- true }()
-		reply.Success = true
-	}
-	// payload
-	reply.Term = rf.currentTerm
-	P("AppendEntries:", args.LeaderID, "<", rf.me, "|", rf.currentTerm, "|", reply.Success)
-	rf.mu.Unlock()
+	otherTerm := args.Term
+	outcome, myTerm := rf.termSync(otherTerm, "AppendEntries", "receiver")
+	reply.Success = outcome <= 0
+	reply.Term = myTerm
+
+	P("AppendEntries:", args.LeaderID, "<", rf.me, "|", otherTerm, "vs", myTerm)
 }
 
 // sendAppendEntries ...
-func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *AppendEntriesReply) bool {
-	P("AppendEntries:", args.LeaderID, ">", server)
-	ok := rf.peers[server].Call("Raft.AppendEntries", args, reply)
-	// rpc term sync
-	rf.mu.Lock()
-	if rf.currentTerm < reply.Term {
-		rf.currentTerm = reply.Term
-		rf.votedFor = -1
-		rf.mu.Unlock()
-		P(rf.me, "follower | term sync fail (AppendEntries sender)")
-		rf.phaseChange("follower", false)
-	} else {
-		rf.mu.Unlock()
+func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *AppendEntriesReply) (ok bool) {
+	P("AppendEntries:", rf.me, ">", server)
+	ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
+	// await reply here
+	if !ok {
+		P("AppendEntries:", rf.me, "?", server)
+		return
 	}
-	return ok
+	otherTerm := reply.Term
+	_, myTerm := rf.termSync(otherTerm, "AppendEntries", "sender")
+	P("AppendEntries:", rf.me, "-", server, "|", myTerm, "vs", otherTerm)
+	return
 }

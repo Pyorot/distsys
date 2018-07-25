@@ -1,0 +1,52 @@
+=== PHASE CYCLES
+<heartbeat> -> leader check -> send heartbeats -> <heartbeat>
+		     v
+		  return
+
+<awaitElect> -> follow check -> election timeout eR-> <awaitElect>
+                      V                 v
+                   return          <candidate>
+
+<callElect>
+     v
+candid check   > return
+     V
+request votes
+     V
+await votes eR > <follower>
+     V
+candid check   > return
+     V
+count votes    > <leader>
+     v
+<callElect>
+
+=== PHASE STEPS
+send heartbeats:
+  send AppendEntry to all
+
+election timeout:
+  await eR or election timeout
+
+request votes:
+  send RequestVote to all
+
+await votes:
+  await votes until majority / everyone voted / eR
+
+count votes:
+  check majority
+
+=== RPC steps
+all RPCs: (tS = term sync, run immediately after receipt/ack'ment)
+ - tS: my term updated when other strictly dominates me
+ - tS success = sender dominates receiver
+ - tS eR (election reset) = receipt && success
+ - return immediately after timeout by default
+
+AppendEntry:
+ [nothing]
+
+RequestVote:
+ - vote if tS success && votedFor = nobody||same (update votedFor)
+ - collect vote as per reply, and false if timeout

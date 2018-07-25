@@ -86,7 +86,7 @@ func (rf *Raft) callElection() {
 			go rf.sendRequestVote(ID, &args, &replies[ID], votes)
 		}
 	}
-	P(rf.me, "requested votes")
+	P(rf.me, "requested votes |", term)
 	// await votes
 	for i := 0; i < len(rf.peers); i++ {
 		select {
@@ -144,4 +144,26 @@ func (rf *Raft) phaseChange(toPhase string, sync bool) (success bool) {
 	}
 	rf.mu.Unlock()
 	return false
+}
+
+func (rf *Raft) termSync(otherTerm int, RPCName string, senderReceiver string) (outcome int, myTerm int) {
+	rf.mu.Lock()
+	myTerm = rf.currentTerm
+	if myTerm < otherTerm {
+		rf.currentTerm = otherTerm
+		rf.votedFor = -1
+		rf.mu.Unlock()
+		P(rf.me, "→ follower | term sync fail:", RPCName, senderReceiver)
+		rf.phaseChange("follower", false)
+		return -1, myTerm
+	} else if myTerm == otherTerm {
+		rf.mu.Unlock()
+		if senderReceiver == "receiver" {
+			go func() { electionReset <- true }()
+		}
+		return 0, myTerm
+	} else {
+		rf.mu.Unlock()
+		return 1, myTerm
+	}
 }

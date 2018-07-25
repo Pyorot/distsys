@@ -4,10 +4,11 @@ Raft		  struct ABC
 GetState	  func	 A
 persist		  func	   C
 readPersist	  func	   C
+Start		  func	  B
+Kill		  func	 ???
+Make		  func	 ABC
+
 RequestVoteArgs   struct AB
 RequestVoteReply  struct A
 RequestVote	  func	 AB
 sendRequestVote	  func
-Start		  func	  B
-Kill		  func	 ???
-Make		  func	 ABC

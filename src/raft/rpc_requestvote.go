@@ -22,6 +22,7 @@ type RequestVoteReply struct {
 	// Your data here (2A).
 	Term        int
 	VoteGranted bool
+	Success     bool // is sender up-to-date?
 }
 
 // RequestVote ...
@@ -29,28 +30,20 @@ type RequestVoteReply struct {
 //
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// Your code here (2A, 2B).
-	rf.mu.Lock()
-	// rpc term sync
-	if rf.currentTerm < args.Term {
-		rf.currentTerm = args.Term
-		rf.votedFor = -1
-		rf.mu.Unlock()
-		P(rf.me, "follower | term sync fail (RequestVote receiver)")
-		rf.phaseChange("follower", false)
-		rf.mu.Lock()
-	}
-	if rf.currentTerm <= args.Term {
-		go func() { electionReset <- true }()
-	}
+	otherTerm := args.Term
+	outcome, myTerm := rf.termSync(otherTerm, "RequestVote", "receiver")
+	reply.Success = outcome <= 0
+	reply.Term = myTerm
+
 	// payload
-	if rf.currentTerm <= args.Term && (rf.votedFor == -1 || rf.votedFor == args.CandidateID) {
+	rf.mu.Lock()
+	if reply.Success && (rf.votedFor == -1 || rf.votedFor == args.CandidateID) {
 		// vote should also depend on log updated-ness (tbd in Part B)
 		reply.VoteGranted = true
 		rf.votedFor = args.CandidateID
 	}
-	reply.Term = rf.currentTerm
-	P("RequestVote:", args.CandidateID, "<", rf.me, "|", rf.currentTerm, "|", reply.VoteGranted)
 	rf.mu.Unlock()
+	P("RequestVote:", args.CandidateID, "<", rf.me, "|", otherTerm, "vs", myTerm, "| vote:", reply.VoteGranted)
 }
 
 // sendRequestVote ...
@@ -82,20 +75,18 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 // that the caller passes the address of the reply struct with &, not
 // the struct itself.
 //
-func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply, doneCh chan bool) bool {
-	P("RequestVote:", args.CandidateID, ">", server)
-	ok := rf.peers[server].Call("Raft.RequestVote", args, reply)
-	doneCh <- reply.VoteGranted // could deadlock
-	// rpc term sync
-	rf.mu.Lock()
-	if rf.currentTerm < reply.Term {
-		rf.currentTerm = reply.Term
-		rf.votedFor = -1
-		rf.mu.Unlock()
-		P(rf.me, "follower | term sync fail (RequestVote sender)")
-		rf.phaseChange("follower", false)
-	} else {
-		rf.mu.Unlock()
+func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply, doneCh chan bool) (ok bool) {
+	P("RequestVote:", rf.me, ">", server)
+	ok = rf.peers[server].Call("Raft.RequestVote", args, reply)
+	// await reply here
+	if !ok {
+		doneCh <- false
+		P("RequestVote:", rf.me, "?", server)
+		return
 	}
-	return ok
+	otherTerm := reply.Term
+	_, myTerm := rf.termSync(otherTerm, "RequestVote", "sender")
+	doneCh <- reply.VoteGranted // could deadlock
+	P("RequestVote:", rf.me, "-", server, "|", myTerm, "vs", otherTerm)
+	return
 }
