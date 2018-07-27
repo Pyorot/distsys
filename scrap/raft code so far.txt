@@ -39,9 +39,9 @@ count votes:
 
 === RPC steps
 all RPCs: (tS = term sync, run immediately after receipt/ack'ment)
- - tS: my term updated when other strictly dominates me
- - tS success = sender dominates receiver
- - tS eR (election reset) = receipt && success
+ - tS update: my term updated when other strictly dominates me
+ - tS eR (election reset) = receipt && sender dominates receiver
+ - success = sender dominates receiver
  - return immediately after timeout by default
 
 AppendEntry:

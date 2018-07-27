@@ -100,6 +100,7 @@ func (rf *Raft) callElection() {
 			P(rf.me, "x candidate")
 			return
 		}
+		// case 3: explicit election timeout?
 		if voteCount >= majority {
 			break
 		}
@@ -120,6 +121,7 @@ func (rf *Raft) callElection() {
 		P(rf.me, "x candidate")
 	} else {
 		P(rf.me, "- candidate | lost vote")
+		// randomised timeout?
 		go rf.callElection()
 	}
 }
