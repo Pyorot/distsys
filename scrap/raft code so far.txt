@@ -41,12 +41,12 @@ count votes:
 all RPCs: (tS = term sync, run immediately after receipt/ack'ment)
  - tS update: my term updated when other strictly dominates me
  - tS eR (election reset) = receipt && sender dominates receiver
- - success = sender dominates receiver
+ - tS react := sender dominates receiver
  - return immediately after timeout by default
 
 AppendEntry:
  [nothing]
 
 RequestVote:
- - vote if tS success && votedFor = nobody||same (update votedFor)
+ - vote if tS react && votedFor = nobody||same (update votedFor)
  - collect vote as per reply, and false if timeout

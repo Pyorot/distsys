@@ -22,9 +22,13 @@ type AppendEntriesReply struct {
 func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
 	otherTerm := args.Term
 	outcome, myTerm := rf.termSync(otherTerm, "AppendEntries", "receiver")
-	reply.Success = outcome <= 0
+	react := outcome <= 0 // tS react: should I react to this RPC at all?
 	reply.Term = myTerm
 
+	// payload
+	if react {
+		reply.Success = true
+	}
 	P("AppendEntries:", args.LeaderID, "<", rf.me, "|", otherTerm, "vs", myTerm)
 }
 

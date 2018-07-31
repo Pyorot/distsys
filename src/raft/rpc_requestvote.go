@@ -22,7 +22,6 @@ type RequestVoteReply struct {
 	// Your data here (2A).
 	Term        int
 	VoteGranted bool
-	Success     bool // is sender up-to-date?
 }
 
 // RequestVote ...
@@ -32,17 +31,19 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// Your code here (2A, 2B).
 	otherTerm := args.Term
 	outcome, myTerm := rf.termSync(otherTerm, "RequestVote", "receiver")
-	reply.Success = outcome <= 0
+	react := outcome <= 0 // tS react: should I react to this RPC at all?
 	reply.Term = myTerm
 
 	// payload
-	rf.mu.Lock()
-	if reply.Success && (rf.votedFor == -1 || rf.votedFor == args.CandidateID) {
-		// vote should also depend on log updated-ness (tbd in Part B)
-		reply.VoteGranted = true
-		rf.votedFor = args.CandidateID
+	if react {
+		rf.mu.Lock()
+		if rf.votedFor == -1 || rf.votedFor == args.CandidateID {
+			// vote should also depend on log updated-ness (tbd in Part B)
+			reply.VoteGranted = true
+			rf.votedFor = args.CandidateID
+		}
+		rf.mu.Unlock()
 	}
-	rf.mu.Unlock()
 	P("RequestVote:", args.CandidateID, "<", rf.me, "|", otherTerm, "vs", myTerm, "| vote:", reply.VoteGranted)
 }
 
