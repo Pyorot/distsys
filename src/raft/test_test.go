@@ -232,7 +232,7 @@ loop:
 		close(is)
 
 		for j := 0; j < servers; j++ {
-			if t, _ := cfg.rafts[j].GetState(); t != term {
+			if t, _, _ := cfg.rafts[j].GetState(); t != term {
 				// term changed -- can't expect low RPC counts
 				continue loop
 			}
@@ -471,7 +471,7 @@ loop:
 		failed := false
 		total2 = 0
 		for j := 0; j < servers; j++ {
-			if t, _ := cfg.rafts[j].GetState(); t != term {
+			if t, _, _ := cfg.rafts[j].GetState(); t != term {
 				// term changed -- can't expect low RPC counts
 				// need to keep going to update total2
 				failed = true

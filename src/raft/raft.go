@@ -21,14 +21,6 @@ import "sync"
 import "labrpc"
 import "time"
 
-/* P ...
-var P = func(...interface{}) (int, error) {
-	var err error
-	return 0, err
-} */
-
-// var P = fmt.Println
-
 // import "bytes"
 // import "labgob"s
 
@@ -53,6 +45,12 @@ type ApplyMsg struct {
 	CommandIndex int
 }
 
+// LogEntry ...
+type LogEntry struct {
+	Term int
+	Data interface{}
+}
+
 var electionTimeout = 500 * time.Millisecond
 var electionRandomisation = 150
 var heartbeatTimeout = 150 * time.Millisecond
@@ -74,7 +72,7 @@ type Raft struct {
 	phase       string // leader or follower or candidate
 	currentTerm int
 	votedFor    int
-	log         []string
+	log         []LogEntry
 
 	commitIndex int
 	lastApplied int
@@ -84,17 +82,17 @@ type Raft struct {
 }
 
 // GetState ...
-// return currentTerm and whether this server
-// believes it is the leader.
-func (rf *Raft) GetState() (int, bool) {
-	var term int
-	var isleader bool
+// return currentTerm, whether this server
+// believes it is the leader, and length
+// of log (= length of list - 1)
+func (rf *Raft) GetState() (term int, isleader bool, loglength int) {
 	// Your code here (2A).
 	rf.mu.Lock()
 	term = rf.currentTerm
 	isleader = rf.phase == "leader"
+	loglength = len(rf.log) - 1
 	rf.mu.Unlock()
-	return term, isleader
+	return
 }
 
 // PERSISTENCE
@@ -153,14 +151,19 @@ func (rf *Raft) readPersist(data []byte) {
 // term. the third return value is true if this server believes it is
 // the leader.
 //
-func (rf *Raft) Start(command interface{}) (int, int, bool) {
-	index := -1
-	term := -1
-	isLeader := true
-
+func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) {
 	// Your code here (2B).
-
-	return index, term, isLeader
+	var logLength int
+	term, isLeader, logLength = rf.GetState()
+	index = logLength + 1 // I guess ???
+	if isLeader {
+		go func() {
+			rf.mu.Lock()
+			rf.log = append(rf.log, LogEntry{term, command})
+			rf.mu.Unlock()
+		}()
+	}
+	return
 }
 
 // Kill ...
@@ -190,6 +193,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.peers = peers
 	rf.persister = persister
 	rf.me = me
+	rf.log = append(rf.log, LogEntry{})
 
 	// Your initialization code here (2A, 2B, 2C).
 	rf.votedFor = -1

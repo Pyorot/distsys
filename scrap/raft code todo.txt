@@ -1,1 +1,9 @@
+- Start(command) check the index return
+- check if logs should have type []LogEntry or []*LogEntry
+
+
+
+
+
+(maybe later)
 - guarantees for votes to be synced with terms

@@ -3,7 +3,7 @@ package raft
 import "fmt"
 
 // Debug ...
-const Debug = 1
+const Debug = 0
 
 // P (DPrintf)
 func P(a ...interface{}) (n int, err error) {

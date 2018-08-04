@@ -38,9 +38,12 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	if react {
 		rf.mu.Lock()
 		if rf.votedFor == -1 || rf.votedFor == args.CandidateID {
-			// vote should also depend on log updated-ness (tbd in Part B)
-			reply.VoteGranted = true
-			rf.votedFor = args.CandidateID
+			myLastEntryIndex := len(rf.log) - 1
+			myLastEntryTerm := rf.log[myLastEntryIndex].Term
+			if args.LastLogTerm > myLastEntryTerm || (args.LastLogTerm == myLastEntryTerm && args.LastLogIndex >= myLastEntryIndex) {
+				reply.VoteGranted = true
+				rf.votedFor = args.CandidateID
+			}
 		}
 		rf.mu.Unlock()
 	}

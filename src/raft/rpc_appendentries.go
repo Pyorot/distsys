@@ -8,14 +8,14 @@ type AppendEntriesArgs struct {
 	LeaderID     int
 	PrevLogIndex int
 	PrevLogTerm  int
-	Entries      []string
+	Entries      []LogEntry
 	LeaderCommit int
 }
 
 // AppendEntriesReply ...
 type AppendEntriesReply struct {
 	Term    int
-	Success bool // is sender up-to-date?
+	Success bool
 }
 
 // AppendEntries ...
