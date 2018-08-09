@@ -27,7 +27,22 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 
 	// payload
 	if react {
-		reply.Success = true
+		rf.mu.Lock()
+		// set success
+		reply.Success = len(rf.log) > args.PrevLogIndex && rf.log[args.PrevLogIndex].Term == args.PrevLogTerm
+		// merge log
+		if reply.Success {
+			// resolve conflicts
+			for i := 0; i < len(args.Entries) && i < len(rf.log)-1-args.PrevLogIndex; i++ {
+				if args.Entries[i].Term != rf.log[args.PrevLogIndex+1+i].Term {
+					rf.log = rf.log[:args.PrevLogIndex+1+i]
+					break
+				}
+			}
+			// add payload
+			rf.log = append(rf.log, args.Entries[len(rf.log)-(args.PrevLogIndex+1):]...)
+		}
+		rf.mu.Unlock()
 	}
 	P("AppendEntries:", args.LeaderID, "<", rf.me, "|", otherTerm, "vs", myTerm)
 }

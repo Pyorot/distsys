@@ -7,6 +7,13 @@ import (
 )
 
 func (rf *Raft) initLeader() {
+	rf.mu.Lock()
+	rf.nextIndex = make([]int, len(rf.peers))
+	for i := range rf.nextIndex {
+		rf.nextIndex[i] = len(rf.log)
+	}
+	rf.matchIndex = make([]int, len(rf.peers))
+	rf.mu.Unlock()
 	rf.heartbeat()
 }
 func (rf *Raft) initFollower() {
@@ -25,16 +32,40 @@ func (rf *Raft) heartbeat() {
 		return
 	}
 	// send heartbeats
+	replies := make([]AppendEntriesReply, len(rf.peers))
+	myLastIndex := len(rf.log) + 1
 	for ID := 0; ID < len(rf.peers); ID++ {
 		if ID != rf.me {
-			args := AppendEntriesArgs{Term: rf.currentTerm, LeaderID: rf.me}
-			go rf.sendAppendEntries(ID, &args, &AppendEntriesReply{})
+			nextIndex := rf.nextIndex[ID]
+			args := AppendEntriesArgs{
+				Term:         rf.currentTerm,
+				LeaderID:     rf.me,
+				LeaderCommit: rf.commitIndex,
+				PrevLogIndex: nextIndex - 1,
+				PrevLogTerm:  rf.log[nextIndex-1].Term, // nextIndex ≥ 1
+			}
+			if nextIndex < len(rf.log) {
+				args.Entries = rf.log[nextIndex:]
+			}
+			go rf.sendAppendEntries(ID, &args, &replies[ID])
+		}
+	}
+	rf.mu.Unlock()
+
+	// heartbeat timeout
+	time.Sleep(heartbeatTimeout)
+
+	// respond to replies
+	for ID := 0; ID < len(rf.peers); ID++ {
+		if ID != rf.me {
+			if replies[ID].Success {
+				rf.nextIndex[ID], rf.matchIndex[ID] = myLastIndex+1, myLastIndex+1
+			} else {
+				rf.nextIndex[ID]--
+			}
 		}
 	}
 
-	rf.mu.Unlock()
-	// heartbeat timeout
-	time.Sleep(heartbeatTimeout)
 	// recurse
 	rf.heartbeat()
 }
