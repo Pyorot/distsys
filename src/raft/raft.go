@@ -79,6 +79,8 @@ type Raft struct {
 
 	nextIndex  []int
 	matchIndex []int
+
+	applyCh chan ApplyMsg
 }
 
 // GetState ...
@@ -194,11 +196,13 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	rf.persister = persister
 	rf.me = me
 	rf.log = append(rf.log, LogEntry{})
+	rf.applyCh = applyCh
 
 	// Your initialization code here (2A, 2B, 2C).
 	rf.votedFor = -1
 	P(rf.me, "follower | init")
 	rf.phaseChange("follower", false)
+	go rf.applyEntries()
 
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())

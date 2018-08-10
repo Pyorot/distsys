@@ -28,19 +28,29 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	// payload
 	if react {
 		rf.mu.Lock()
-		// set success
+		// 1. set success
 		reply.Success = len(rf.log) > args.PrevLogIndex && rf.log[args.PrevLogIndex].Term == args.PrevLogTerm
-		// merge log
+		// 2. merge log
 		if reply.Success {
-			// resolve conflicts
+			// 2a. resolve conflicts
 			for i := 0; i < len(args.Entries) && i < len(rf.log)-1-args.PrevLogIndex; i++ {
 				if args.Entries[i].Term != rf.log[args.PrevLogIndex+1+i].Term {
 					rf.log = rf.log[:args.PrevLogIndex+1+i]
 					break
 				}
 			}
-			// add payload
+			// 2b. add payload
 			rf.log = append(rf.log, args.Entries[len(rf.log)-(args.PrevLogIndex+1):]...)
+		}
+		// 3. update commitIndex
+		if len(args.Entries) > 0 && args.LeaderCommit > rf.commitIndex {
+			min := func(a int, b int) int {
+				if a <= b {
+					return a
+				}
+				return b
+			}
+			rf.commitIndex = min(args.LeaderCommit, len(args.Entries)-1)
 		}
 		rf.mu.Unlock()
 	}

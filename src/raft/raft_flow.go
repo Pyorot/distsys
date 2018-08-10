@@ -3,6 +3,7 @@ package raft
 import (
 	"math"
 	"math/rand"
+	"sort"
 	"time"
 )
 
@@ -55,7 +56,7 @@ func (rf *Raft) heartbeat() {
 	// heartbeat timeout
 	time.Sleep(heartbeatTimeout)
 
-	// respond to replies
+	// adjusting follower indices depending on responses
 	for ID := 0; ID < len(rf.peers); ID++ {
 		if ID != rf.me {
 			if replies[ID].Success {
@@ -65,6 +66,22 @@ func (rf *Raft) heartbeat() {
 			}
 		}
 	}
+
+	// commit phase (leader)
+	rf.mu.Lock()
+	sortedMatchIndex := make([]int, len(rf.peers))
+	copy(sortedMatchIndex, rf.matchIndex)
+	sortedMatchIndex[rf.me] = 0
+	sort.Ints(sortedMatchIndex)
+	maxCommit := sortedMatchIndex[(len(sortedMatchIndex)+1)/2]
+	// 7: [∞*, 2,4,5,6*,8*,8*] = 6; 8: [∞*, 1,7,7,7*,8*,9*,9*] = 7
+	for i := maxCommit; i > rf.commitIndex; i-- {
+		if rf.log[i].Term == rf.currentTerm {
+			rf.commitIndex = i
+			break
+		}
+	}
+	rf.mu.Unlock()
 
 	// recurse
 	rf.heartbeat()
@@ -155,6 +172,16 @@ func (rf *Raft) callElection() {
 		// randomised timeout?
 		go rf.callElection()
 	}
+}
+
+func (rf *Raft) applyEntries() {
+	rf.mu.Lock()
+	if rf.commitIndex > rf.lastApplied {
+		rf.lastApplied++
+		rf.applyCh <- ApplyMsg{CommandValid: true, Command: rf.log[rf.lastApplied].Data, CommandIndex: rf.lastApplied}
+	}
+	rf.mu.Unlock()
+	go rf.applyEntries()
 }
 
 func (rf *Raft) phaseChange(toPhase string, sync bool) (success bool) {
