@@ -44,13 +44,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		}
 		// 3. update commitIndex
 		if len(args.Entries) > 0 && args.LeaderCommit > rf.commitIndex {
-			min := func(a int, b int) int {
-				if a <= b {
-					return a
-				}
-				return b
-			}
-			rf.commitIndex = min(args.LeaderCommit, len(args.Entries)-1)
+			rf.commitIndex = Min(args.LeaderCommit, len(args.Entries)-1)
 		}
 		rf.mu.Unlock()
 	}

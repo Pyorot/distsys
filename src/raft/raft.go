@@ -175,6 +175,9 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 // turn off debug output from this instance.
 //
 func (rf *Raft) Kill() {
+	rf.mu.Lock()
+	time.Sleep(2 * time.Second)
+	P(rf.me, "--test clear--")
 	// Your code here, if desired.
 }
 
@@ -200,12 +203,21 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	// Your initialization code here (2A, 2B, 2C).
 	rf.votedFor = -1
-	P(rf.me, "follower | init")
-	rf.phaseChange("follower", false)
+	rf.phaseChange("follower", false, "init")
 	go rf.applyEntries()
 
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())
 
 	return rf
+}
+
+// aux functions
+
+// Min ...
+func Min(a int, b int) int {
+	if a <= b {
+		return a
+	}
+	return b
 }
