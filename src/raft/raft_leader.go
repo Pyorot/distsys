@@ -35,9 +35,9 @@ func (rf *Raft) heartbeat(beatNumber int) {
 				Term:         rf.currentTerm,
 				LeaderID:     rf.me,
 				LeaderCommit: rf.commitIndex,
-				PrevLogIndex: nextIndex - 1,
-				PrevLogTerm:  rf.log[nextIndex-1].Term, // nextIndex ≥ 1
+				PrevLogIndex: Min(nextIndex, len(rf.log)) - 1, // nextIndex ≥ 1
 			}
+			args.PrevLogTerm = rf.log[args.PrevLogIndex].Term
 			if nextIndex < len(rf.log) {
 				args.Entries = rf.log[nextIndex:]
 			}

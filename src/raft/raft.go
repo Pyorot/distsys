@@ -176,7 +176,7 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 //
 func (rf *Raft) Kill() {
 	rf.mu.Lock()
-	time.Sleep(2 * time.Second)
+	time.Sleep(1 * time.Second)
 	P(rf.me, "--test clear--")
 	// Your code here, if desired.
 }

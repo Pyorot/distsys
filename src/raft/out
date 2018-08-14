@@ -7,19 +7,19 @@ Test (2A): initial election ...
 2 requested votes | 1
 RequestVote: 2 > 1
 1 - follower | tS fail (RequestVote receiver)
-RequestVote: 2 > 0
-0 - follower | tS fail (RequestVote receiver)
 RequestVote: 2 < 1 | 1 vs 0 | vote: true
 RequestVote: 2 - 1 | 1 vs 0
 2 received votes
 2 → leader | elected (2 votes)
-RequestVote: 2 < 0 | 1 vs 0 | vote: true
-RequestVote: 2 - 0 | 1 vs 0
 AppendEntries: 2 > 1
 AppendEntries: 2 < 1 | 1 vs 1
 AppendEntries: 2 - 1 | 1 vs 1
+RequestVote: 2 > 0
+0 - follower | tS fail (RequestVote receiver)
+RequestVote: 2 < 0 | 1 vs 0 | vote: true
 0 - follower | reset
 AppendEntries: 2 > 0
+RequestVote: 2 - 0 | 1 vs 0
 AppendEntries: 2 < 0 | 1 vs 1
 AppendEntries: 2 - 0 | 1 vs 1
 1 - follower | reset
@@ -27,38 +27,38 @@ H 2 1 1 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 0
 AppendEntries: 2 < 0 | 1 vs 1
 AppendEntries: 2 - 0 | 1 vs 1
-0 - follower | reset
 AppendEntries: 2 > 1
 AppendEntries: 2 < 1 | 1 vs 1
 AppendEntries: 2 - 1 | 1 vs 1
+0 - follower | reset
 1 - follower | reset
 H 2 1 2 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 1 vs 1
-AppendEntries: 2 - 1 | 1 vs 1
 AppendEntries: 2 > 0
 AppendEntries: 2 < 0 | 1 vs 1
 AppendEntries: 2 - 0 | 1 vs 1
+AppendEntries: 2 > 1
+AppendEntries: 2 < 1 | 1 vs 1
+AppendEntries: 2 - 1 | 1 vs 1
 0 - follower | reset
 1 - follower | reset
 H 2 1 3 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 0
-0 - follower | reset
-AppendEntries: 2 < 0 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
 AppendEntries: 2 > 1
 AppendEntries: 2 < 1 | 1 vs 1
 AppendEntries: 2 - 1 | 1 vs 1
+AppendEntries: 2 > 0
+AppendEntries: 2 < 0 | 1 vs 1
+AppendEntries: 2 - 0 | 1 vs 1
+0 - follower | reset
 1 - follower | reset
 H 2 1 4 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 0
 AppendEntries: 2 > 1
 AppendEntries: 2 < 0 | 1 vs 1
+0 - follower | reset
+AppendEntries: 2 - 0 | 1 vs 1
+1 - follower | reset
 AppendEntries: 2 < 1 | 1 vs 1
 AppendEntries: 2 - 1 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
-0 - follower | reset
-1 - follower | reset
 H 2 1 5 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 0
 AppendEntries: 2 < 0 | 1 vs 1
@@ -96,12 +96,12 @@ AppendEntries: 2 - 0 | 1 vs 1
 0 - follower | reset
 1 - follower | reset
 H 2 1 9 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 0
-AppendEntries: 2 < 0 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
 AppendEntries: 2 > 1
 AppendEntries: 2 < 1 | 1 vs 1
 AppendEntries: 2 - 1 | 1 vs 1
+AppendEntries: 2 > 0
+AppendEntries: 2 < 0 | 1 vs 1
+AppendEntries: 2 - 0 | 1 vs 1
 0 - follower | reset
 1 - follower | reset
 H 2 1 10 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
@@ -114,19 +114,19 @@ AppendEntries: 2 - 0 | 1 vs 1
 0 - follower | reset
 1 - follower | reset
 H 2 1 11 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 1 vs 1
-AppendEntries: 2 - 1 | 1 vs 1
 AppendEntries: 2 > 0
 AppendEntries: 2 < 0 | 1 vs 1
 AppendEntries: 2 - 0 | 1 vs 1
-0 - follower | reset
-1 - follower | reset
-H 2 1 12 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 1
 AppendEntries: 2 < 1 | 1 vs 1
 AppendEntries: 2 - 1 | 1 vs 1
+0 - follower | reset
+1 - follower | reset
+H 2 1 12 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 0
+AppendEntries: 2 > 1
+AppendEntries: 2 < 1 | 1 vs 1
+AppendEntries: 2 - 1 | 1 vs 1
 AppendEntries: 2 < 0 | 1 vs 1
 AppendEntries: 2 - 0 | 1 vs 1
 0 - follower | reset
@@ -159,21 +159,21 @@ AppendEntries: 2 - 0 | 1 vs 1
 0 - follower | reset
 1 - follower | reset
 H 2 1 16 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 0
-AppendEntries: 2 < 0 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
 AppendEntries: 2 > 1
 AppendEntries: 2 < 1 | 1 vs 1
 AppendEntries: 2 - 1 | 1 vs 1
+AppendEntries: 2 > 0
+AppendEntries: 2 < 0 | 1 vs 1
+AppendEntries: 2 - 0 | 1 vs 1
 0 - follower | reset
 1 - follower | reset
 H 2 1 17 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 1 vs 1
-AppendEntries: 2 - 1 | 1 vs 1
 AppendEntries: 2 > 0
 AppendEntries: 2 < 0 | 1 vs 1
 AppendEntries: 2 - 0 | 1 vs 1
+AppendEntries: 2 > 1
+AppendEntries: 2 < 1 | 1 vs 1
+AppendEntries: 2 - 1 | 1 vs 1
 0 - follower | reset
 1 - follower | reset
 H 2 1 18 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
@@ -194,19 +194,22 @@ AppendEntries: 2 < 0 | 1 vs 1
 AppendEntries: 2 - 0 | 1 vs 1
 0 - follower | reset
 1 - follower | reset
-  ... Passed --   3.5  3   42    0
 H 2 1 20 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 0
+AppendEntries: 2 < 0 | 1 vs 1
+AppendEntries: 2 - 0 | 1 vs 1
 AppendEntries: 2 > 1
 AppendEntries: 2 < 1 | 1 vs 1
-0 - follower | reset
 AppendEntries: 2 - 1 | 1 vs 1
+0 - follower | reset
+1 - follower | reset
+  ... Passed --   3.7  3   44    0
 H 2 1 21 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 1
 AppendEntries: 2 > 0
 AppendEntries: 2 < 1 | 1 vs 1
-1 - follower | reset
 AppendEntries: 2 - 1 | 1 vs 1
+0 - follower | reset
 H 2 1 22 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 1
 AppendEntries: 2 > 0
@@ -217,17 +220,17 @@ H 2 1 23 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 1
 AppendEntries: 2 > 0
 AppendEntries: 2 < 1 | 1 vs 1
-AppendEntries: 2 - 1 | 1 vs 1
 1 - follower | reset
+AppendEntries: 2 - 1 | 1 vs 1
 H 2 1 24 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
 AppendEntries: 2 > 0
+AppendEntries: 2 > 1
 AppendEntries: 2 < 1 | 1 vs 1
 1 - follower | reset
 AppendEntries: 2 - 1 | 1 vs 1
 H 2 1 25 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
 AppendEntries: 2 > 0
+AppendEntries: 2 > 1
 AppendEntries: 2 < 1 | 1 vs 1
 1 - follower | reset
 AppendEntries: 2 - 1 | 1 vs 1
@@ -244,8 +247,8 @@ AppendEntries: 2 < 1 | 1 vs 1
 1 - follower | reset
 AppendEntries: 2 - 1 | 1 vs 1
 H 2 1 28 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 0
 AppendEntries: 2 > 1
+AppendEntries: 2 > 0
 AppendEntries: 2 < 1 | 1 vs 1
 1 - follower | reset
 AppendEntries: 2 - 1 | 1 vs 1
@@ -253,17 +256,17 @@ H 2 1 29 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 1
 AppendEntries: 2 > 0
 AppendEntries: 2 < 1 | 1 vs 1
-AppendEntries: 2 - 1 | 1 vs 1
 1 - follower | reset
+AppendEntries: 2 - 1 | 1 vs 1
 H 2 1 30 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 1
 AppendEntries: 2 > 0
 AppendEntries: 2 < 1 | 1 vs 1
-AppendEntries: 2 - 1 | 1 vs 1
 1 - follower | reset
+AppendEntries: 2 - 1 | 1 vs 1
 H 2 1 31 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
 AppendEntries: 2 > 0
+AppendEntries: 2 > 1
 AppendEntries: 2 < 1 | 1 vs 1
 1 - follower | reset
 AppendEntries: 2 - 1 | 1 vs 1
@@ -273,10 +276,13 @@ AppendEntries: 2 > 0
 AppendEntries: 2 < 1 | 1 vs 1
 1 - follower | reset
 AppendEntries: 2 - 1 | 1 vs 1
-0 --test clear--
 H 2 1 33 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 1
 AppendEntries: 2 > 0
+AppendEntries: 2 < 1 | 1 vs 1
+1 - follower | reset
+AppendEntries: 2 - 1 | 1 vs 1
+0 --test clear--
 H 2 1 34 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 1
 AppendEntries: 2 > 0
@@ -284,8 +290,8 @@ H 2 1 35 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 1
 AppendEntries: 2 > 0
 H 2 1 36 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 0
 AppendEntries: 2 > 1
+AppendEntries: 2 > 0
 H 2 1 37 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 1
 AppendEntries: 2 > 0
@@ -305,528 +311,523 @@ H 2 1 42 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 1
 AppendEntries: 2 > 0
 H 2 1 43 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 0
 AppendEntries: 2 > 1
+AppendEntries: 2 > 0
 H 2 1 44 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 2 > 0
 AppendEntries: 2 > 1
 H 2 1 45 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
 AppendEntries: 2 > 0
+AppendEntries: 2 > 1
 H 2 1 46 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 0
 AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+H 2 1 47 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
 1 --test clear--
 2 --test clear--
 0 → follower | init
 1 → follower | init
 2 → follower | init
 Test (2A): election after network failure ...
-2 → candidate | timeout
-2 x follower
-2 requested votes | 1
-RequestVote: 2 > 1
-1 - follower | tS fail (RequestVote receiver)
-RequestVote: 2 < 1 | 1 vs 0 | vote: true
-RequestVote: 2 - 1 | 1 vs 0
-2 received votes
-2 → leader | elected (2 votes)
-RequestVote: 2 > 0
-0 - follower | tS fail (RequestVote receiver)
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 1 vs 1
-AppendEntries: 2 - 1 | 1 vs 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 0 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
-0 - follower | reset
-RequestVote: 2 < 0 | 1 vs 0 | vote: true
-RequestVote: 2 - 0 | 1 vs 0
-1 - follower | reset
-H 2 1 1 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 1 vs 1
-AppendEntries: 2 - 1 | 1 vs 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 0 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
-0 - follower | reset
-1 - follower | reset
-H 2 1 2 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 1 vs 1
-AppendEntries: 2 - 1 | 1 vs 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 0 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
-0 - follower | reset
-1 - follower | reset
-H 2 1 3 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 0
-AppendEntries: 2 > 1
-H 2 1 4 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H 2 1 5 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 0
-AppendEntries: 2 > 1
 0 → candidate | timeout
 0 x follower
-0 requested votes | 2
+0 requested votes | 1
 RequestVote: 0 > 2
+2 - follower | tS fail (RequestVote receiver)
 RequestVote: 0 > 1
 1 - follower | tS fail (RequestVote receiver)
-RequestVote: 0 < 1 | 2 vs 1 | vote: true
-RequestVote: 0 - 1 | 2 vs 1
+RequestVote: 0 < 2 | 1 vs 0 | vote: true
+RequestVote: 0 - 2 | 1 vs 0
 0 received votes
 0 → leader | elected (2 votes)
 AppendEntries: 0 > 2
+AppendEntries: 0 < 2 | 1 vs 1
+AppendEntries: 0 - 2 | 1 vs 1
+RequestVote: 0 < 1 | 1 vs 0 | vote: true
+RequestVote: 0 - 1 | 1 vs 0
 AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2
-AppendEntries: 0 - 1 | 2 vs 2
+AppendEntries: 0 < 1 | 1 vs 1
+AppendEntries: 0 - 1 | 1 vs 1
 1 - follower | reset
-H 2 1 6 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 0
+2 - follower | reset
+H 0 1 1 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 0 > 2
+AppendEntries: 0 > 1
+H 0 1 2 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 0 > 2
+AppendEntries: 0 > 1
+H 0 1 3 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 0 > 2
+AppendEntries: 0 > 1
+AppendEntries: 0 ? 2
+2 → candidate | timeout
+2 x follower
+2 requested votes | 2
+RequestVote: 2 > 1
+1 - follower | tS fail (RequestVote receiver)
+RequestVote: 2 < 1 | 2 vs 1 | vote: true
+RequestVote: 2 > 0
+RequestVote: 2 - 1 | 2 vs 1
+2 received votes
+2 → leader | elected (2 votes)
 AppendEntries: 2 > 1
-H 0 2 1 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-2 → follower | tS fail (AppendEntries receiver)
-AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2
-AppendEntries: 0 - 1 | 2 vs 2
-AppendEntries: 0 < 2 | 2 vs 1
-AppendEntries: 0 - 2 | 2 vs 1
+AppendEntries: 2 < 1 | 2 vs 2
+AppendEntries: 2 - 1 | 2 vs 2
+AppendEntries: 2 > 0
 1 - follower | reset
-2 x leader (2)
-2 x candidate
-H 0 2 2 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+H 0 1 4 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 0 > 2
-AppendEntries: 0 < 2 | 2 vs 2
-AppendEntries: 0 - 2 | 2 vs 2
 AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2
-AppendEntries: 0 - 1 | 2 vs 2
-2 - follower | reset
+AppendEntries: 0 ? 1
+H 2 2 1 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 < 1 | 2 vs 2
+AppendEntries: 2 - 1 | 2 vs 2
+AppendEntries: 2 > 0
 1 - follower | reset
-AppendEntries: 2 ? 0
-H 0 2 3 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+H 0 1 5 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 0 > 2
-AppendEntries: 0 < 2 | 2 vs 2
-AppendEntries: 0 - 2 | 2 vs 2
 AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2
-AppendEntries: 0 - 1 | 2 vs 2
-2 - follower | reset
+H 2 2 2 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 < 1 | 2 vs 2
+AppendEntries: 2 - 1 | 2 vs 2
+AppendEntries: 2 > 0
 1 - follower | reset
-H 0 2 4 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+H 0 1 6 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 0 > 2
 AppendEntries: 0 > 1
-H 0 2 5 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 6 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
+H 2 2 3 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 < 1 | 2 vs 2
+AppendEntries: 2 - 1 | 2 vs 2
+AppendEntries: 2 > 0
+0 → follower | tS fail (AppendEntries receiver)
+AppendEntries: 2 < 0 | 2 vs 1
+AppendEntries: 2 - 0 | 2 vs 1
+1 - follower | reset
+0 x leader (2)
+0 x candidate
+H 2 2 4 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 < 1 | 2 vs 2
+AppendEntries: 2 - 1 | 2 vs 2
+AppendEntries: 2 > 0
+AppendEntries: 2 < 0 | 2 vs 2
+AppendEntries: 2 - 0 | 2 vs 2
+0 - follower | reset
+1 - follower | reset
+H 2 2 5 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 < 1 | 2 vs 2
+AppendEntries: 2 - 1 | 2 vs 2
+AppendEntries: 2 > 0
+AppendEntries: 2 < 0 | 2 vs 2
+AppendEntries: 2 - 0 | 2 vs 2
+0 - follower | reset
+1 - follower | reset
+AppendEntries: 0 ? 2
+H 2 2 6 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+H 2 2 7 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+H 2 2 8 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
 1 → candidate | timeout
 1 x follower
 1 requested votes | 3
 RequestVote: 1 > 2
 RequestVote: 1 > 0
-AppendEntries: 2 ? 1
-H 0 2 7 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-2 → candidate | timeout
-2 x follower
-2 requested votes | 3
-RequestVote: 2 > 1
-RequestVote: 2 > 0
-H 0 2 8 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-H 0 2 9 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
+0 → candidate | timeout
+0 x follower
+0 requested votes | 3
+RequestVote: 0 > 2
+RequestVote: 0 > 1
+H 2 2 9 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 0
+AppendEntries: 2 > 1
+H 2 2 10 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 0
+AppendEntries: 2 > 1
 AppendEntries: 0 ? 2
-H 0 2 10 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 11 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 12 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 1
-AppendEntries: 0 > 2
-AppendEntries: 0 ? 1
-H 0 2 13 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
+H 2 2 11 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 1
+RequestVote: 2 ? 0
+H 2 2 12 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 0
+AppendEntries: 2 > 1
+H 2 2 13 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
 AppendEntries: 2 ? 0
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H 0 2 14 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 15 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H 0 2 16 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 1
-AppendEntries: 0 > 2
-H 0 2 17 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-H 0 2 18 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 1
-AppendEntries: 0 > 2
-AppendEntries: 0 ? 1
-H 0 2 19 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-AppendEntries: 0 ? 2
-H 0 2 20 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
+H 2 2 14 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
 AppendEntries: 2 ? 1
-H 0 2 21 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-H 0 2 22 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 23 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 24 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 25 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
+H 2 2 15 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 0
+H 2 2 16 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+H 2 2 17 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
 AppendEntries: 0 ? 2
+H 2 2 18 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 0
+H 2 2 19 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+H 2 2 20 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
 AppendEntries: 0 ? 2
-H 0 2 26 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-H 0 2 27 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 28 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
+H 2 2 21 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 0
+H 2 2 22 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+H 2 2 23 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
 AppendEntries: 2 ? 0
 AppendEntries: 0 ? 1
+AppendEntries: 0 ? 1
+H 2 2 24 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 0
+H 2 2 25 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+H 2 2 26 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 1
+H 2 2 27 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 1
+H 2 2 28 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 0 ? 2
+AppendEntries: 0 ? 1
+H 2 2 29 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 0 ? 1
+H 2 2 30 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 0
+H 2 2 31 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+H 2 2 32 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 0
+H 2 2 33 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 1
+H 2 2 34 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 1
+H 2 2 35 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
+H 2 2 36 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 0
+AppendEntries: 2 > 1
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
+H 2 2 37 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 1
+H 2 2 38 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 1
+AppendEntries: 0 ? 1
+H 2 2 39 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 1
+H 2 2 40 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
+H 2 2 41 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+RequestVote: 0 ? 2
+H 2 2 42 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
 RequestVote: 1 ? 2
 AppendEntries: 2 ? 1
-H 0 2 29 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+H 2 2 43 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 0
+RequestVote: 0 ? 1
+0 received votes
+0 → follower | lost vote
+0 x candidate
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 1
+H 2 2 44 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 1
+H 2 2 45 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 1
+H 2 2 46 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+H 2 2 47 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+RequestVote: 1 ? 0
+1 received votes
+1 → follower | lost vote
+1 x candidate
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
+0 → candidate | timeout
+0 x follower
+0 requested votes | 4
+RequestVote: 0 > 2
+RequestVote: 0 > 1
+1 - follower | tS fail (RequestVote receiver)
+RequestVote: 0 < 1 | 4 vs 3 | vote: true
+RequestVote: 0 - 1 | 4 vs 3
+0 received votes
+0 → leader | elected (2 votes)
 AppendEntries: 0 > 2
 AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-H 0 2 30 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 0 < 1 | 4 vs 4
+AppendEntries: 0 - 1 | 4 vs 4
+1 - follower | reset
+H 2 2 48 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 1
+H 0 4 1 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 0 > 2
 AppendEntries: 0 > 1
-H 0 2 31 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 0 < 1 | 4 vs 4
+AppendEntries: 0 - 1 | 4 vs 4
+1 - follower | reset
+H 2 2 49 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 0
+H 0 4 2 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 0 > 2
 AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-RequestVote: 0 ? 2
-H 0 2 32 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 0 < 1 | 4 vs 4
+AppendEntries: 0 - 1 | 4 vs 4
+1 - follower | reset
+H 2 2 50 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 > 1
+AppendEntries: 2 > 0
+AppendEntries: 2 ? 0
+H 0 4 3 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 0 > 2
+2 → follower | tS fail (AppendEntries receiver)
+AppendEntries: 0 < 2 | 4 vs 2
+AppendEntries: 0 - 2 | 4 vs 2
 AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-H 0 2 33 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 34 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 35 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H 0 2 36 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-RequestVote: 2 ? 1
-H 0 2 37 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 38 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 0 2 39 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-RequestVote: 2 ? 0
-2 received votes
-2 → follower | lost vote
+AppendEntries: 0 < 1 | 4 vs 4
+AppendEntries: 0 - 1 | 4 vs 4
+1 - follower | reset
+2 x leader (2)
 2 x candidate
-AppendEntries: 0 ? 1
-H 0 2 40 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
 AppendEntries: 0 ? 2
-H 0 2 41 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 2 ? 0
+H 0 4 4 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 0 > 2
+AppendEntries: 0 < 2 | 4 vs 4
+AppendEntries: 0 - 2 | 4 vs 4
 AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-H 0 2 42 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 0 < 1 | 4 vs 4
+AppendEntries: 0 - 1 | 4 vs 4
+2 - follower | reset
+1 - follower | reset
+AppendEntries: 2 ? 1
+H 0 4 5 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
 AppendEntries: 0 > 2
+AppendEntries: 0 < 2 | 4 vs 4
+AppendEntries: 0 - 2 | 4 vs 4
 AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
+AppendEntries: 0 < 1 | 4 vs 4
+AppendEntries: 0 - 1 | 4 vs 4
+2 - follower | reset
+1 - follower | reset
+H 0 4 6 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 0 > 2
+AppendEntries: 0 < 2 | 4 vs 4
+AppendEntries: 0 - 2 | 4 vs 4
+AppendEntries: 0 > 1
+AppendEntries: 0 < 1 | 4 vs 4
+AppendEntries: 0 - 1 | 4 vs 4
+2 - follower | reset
+1 - follower | reset
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 0
+  ... Passed --   9.3  3  140    0
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 1
+1 → candidate | timeout
+1 x follower
+1 requested votes | 5
+RequestVote: 1 > 0
+RequestVote: 1 > 2
+2 - follower | tS fail (RequestVote receiver)
+RequestVote: 1 < 2 | 5 vs 4 | vote: true
+RequestVote: 1 - 2 | 5 vs 4
+1 received votes
+1 → leader | elected (2 votes)
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+AppendEntries: 1 < 2 | 5 vs 5
+2 - follower | reset
+AppendEntries: 1 - 2 | 5 vs 5
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 1
+H 1 5 1 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+AppendEntries: 1 < 2 | 5 vs 5
+2 - follower | reset
+AppendEntries: 1 - 2 | 5 vs 5
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
+H 1 5 2 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+AppendEntries: 1 < 2 | 5 vs 5
+2 - follower | reset
+AppendEntries: 1 - 2 | 5 vs 5
+H 1 5 3 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+AppendEntries: 1 < 2 | 5 vs 5
+2 - follower | reset
+AppendEntries: 1 - 2 | 5 vs 5
+AppendEntries: 2 ? 0
+H 1 5 4 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+AppendEntries: 1 < 2 | 5 vs 5
+2 - follower | reset
+AppendEntries: 1 - 2 | 5 vs 5
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 1
+H 1 5 5 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+AppendEntries: 1 < 2 | 5 vs 5
+2 - follower | reset
+AppendEntries: 1 - 2 | 5 vs 5
+AppendEntries: 2 ? 1
+H 1 5 6 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+AppendEntries: 1 < 2 | 5 vs 5
+2 - follower | reset
+AppendEntries: 1 - 2 | 5 vs 5
+AppendEntries: 2 ? 1
+H 1 5 7 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+AppendEntries: 1 < 2 | 5 vs 5
+2 - follower | reset
+AppendEntries: 1 - 2 | 5 vs 5
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
+H 1 5 8 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+AppendEntries: 1 < 2 | 5 vs 5
+2 - follower | reset
+AppendEntries: 1 - 2 | 5 vs 5
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 1
+H 1 5 9 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+AppendEntries: 1 < 2 | 5 vs 5
+2 - follower | reset
+AppendEntries: 1 - 2 | 5 vs 5
+H 1 5 10 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+AppendEntries: 1 < 2 | 5 vs 5
+AppendEntries: 1 - 2 | 5 vs 5
+2 - follower | reset
+0 --test clear--
+AppendEntries: 2 ? 1
+RequestVote: 0 ? 2
+AppendEntries: 2 ? 1
+AppendEntries: 2 ? 0
+AppendEntries: 2 ? 0
 2 → candidate | timeout
 2 x follower
-2 requested votes | 4
-RequestVote: 2 > 1
-1 → follower | tS fail (RequestVote receiver)
+2 requested votes | 6
 RequestVote: 2 > 0
-RequestVote: 2 < 1 | 4 vs 3 | vote: true
-RequestVote: 2 - 1 | 4 vs 3
-2 received votes
-2 → leader | elected (2 votes)
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 4 vs 4
-AppendEntries: 2 - 1 | 4 vs 4
-AppendEntries: 2 > 0
-1 - follower | vote interrupt
-1 x candidate
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-H 0 2 43 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H 2 4 1 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 4 vs 4
-AppendEntries: 2 - 1 | 4 vs 4
-AppendEntries: 2 > 0
-1 - follower | reset
-AppendEntries: 0 ? 2
-H 0 2 44 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
+RequestVote: 2 > 1
+AppendEntries: 2 ? 1
 AppendEntries: 2 ? 0
-H 2 4 2 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 4 vs 4
-AppendEntries: 2 - 1 | 4 vs 4
-AppendEntries: 2 > 0
-0 → follower | tS fail (AppendEntries receiver)
-AppendEntries: 2 < 0 | 4 vs 2
-AppendEntries: 2 - 0 | 4 vs 2
-1 - follower | reset
-AppendEntries: 0 ? 1
-0 x leader (2)
-0 x candidate
-H 2 4 3 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 4 vs 4
-AppendEntries: 2 - 1 | 4 vs 4
-AppendEntries: 2 > 0
-AppendEntries: 2 < 0 | 4 vs 4
-AppendEntries: 2 - 0 | 4 vs 4
-0 - follower | reset
-1 - follower | reset
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H 2 4 4 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 4 vs 4
-AppendEntries: 2 - 1 | 4 vs 4
-AppendEntries: 2 > 0
-AppendEntries: 2 < 0 | 4 vs 4
-AppendEntries: 2 - 0 | 4 vs 4
-0 - follower | reset
-1 - follower | reset
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-  ... Passed --   8.6  3  124    0
-H 2 4 5 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-0 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-RequestVote: 2 ? 0
-H 2 4 6 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-AppendEntries: 2 - 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 0 ? 1
-H 2 4 7 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-RequestVote: 1 ? 0
-AppendEntries: 0 ? 2
-H 2 4 8 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-AppendEntries: 0 ? 1
-H 2 4 9 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-H 2 4 10 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-AppendEntries: 2 - 1 | 4 vs 4
-1 - follower | reset
-H 2 4 11 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-H 2 4 12 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-AppendEntries: 0 ? 2
-H 2 4 13 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-H 2 4 14 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-H 2 4 15 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H 2 4 16 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H 2 4 17 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-H 2 4 18 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 4 vs 4
-1 - follower | reset
-AppendEntries: 2 - 1 | 4 vs 4
-0 --test clear--
-H 2 4 19 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-H 2 4 20 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-H 2 4 21 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 0 ? 2
-H 2 4 22 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H 2 4 23 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H 2 4 24 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 0 ? 1
-H 2 4 25 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H 2 4 26 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 ? 0
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H 2 4 27 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H 2 4 28 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 0 ? 1
-H 2 4 29 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H 2 4 30 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 0 ? 2
-H 2 4 31 | nextIndex [1 1 1] | matchIndex [0 0 0] | lastLogIndex 0
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-1 --test clear--
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-2 --test clear--
-PASS
-ok  	raft	24.220s
+exit status 2
+FAIL	raft	21.890s
