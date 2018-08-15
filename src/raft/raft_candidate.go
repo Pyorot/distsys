@@ -67,7 +67,7 @@ func (rf *Raft) callElection() {
 
 	// continue
 	if voteCount >= majority {
-		rf.phaseChange("leader", true, "elected ("+strconv.Itoa(voteCount)+" votes)")
+		rf.phaseChange("leader", true, "elected ("+strconv.Itoa(voteCount)+" votes; term "+strconv.Itoa(rf.currentTerm)+")")
 	} else {
 		rf.phaseChange("follower", false, "lost vote")
 	}

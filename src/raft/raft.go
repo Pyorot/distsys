@@ -51,9 +51,9 @@ type LogEntry struct {
 	Data interface{}
 }
 
-var electionTimeout = 500 * time.Millisecond
+var electionTimeout = 850 * time.Millisecond
 var electionRandomisation = 150
-var heartbeatTimeout = 150 * time.Millisecond
+var heartbeatTimeout = 105 * time.Millisecond
 
 var electionReset = make(chan bool)
 
@@ -164,7 +164,9 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 			rf.log = append(rf.log, LogEntry{term, command})
 			rf.mu.Unlock()
 		}()
+		P(rf.me, "input o", term, command)
 	}
+	P(rf.me, "input x", command)
 	return
 }
 
@@ -176,7 +178,8 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 //
 func (rf *Raft) Kill() {
 	rf.mu.Lock()
-	time.Sleep(1 * time.Second)
+	time.Sleep(200 * time.Millisecond)
+	P(rf.me, rf.log, rf.commitIndex)
 	P(rf.me, "--test clear--")
 	// Your code here, if desired.
 }
