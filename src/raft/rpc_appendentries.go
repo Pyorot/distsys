@@ -54,10 +54,11 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		// 3. update commitIndex
 		if len(args.Entries) > 0 && args.LeaderCommit > rf.commitIndex {
 			rf.commitIndex = Min(args.LeaderCommit, len(rf.log)-1)
+			go rf.applyEntries()
 		}
 		rf.mu.Unlock()
 	}
-	P("AppendEntries:", args.LeaderID, "<", rf.me, "|", otherTerm, "vs", myTerm)
+	P("AppendEntries:", args.LeaderID, "<", rf.me, "|", otherTerm, "vs", myTerm, "| react", react, "| success", reply.Success)
 }
 
 // sendAppendEntries ...

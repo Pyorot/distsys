@@ -28,4 +28,5 @@ func (rf *Raft) awaitElection() {
 		rf.phaseChange("candidate", false, "timeout")
 		P(rf.me, "x follower")
 	}
+	electionTimeout = steadyElectionTimeout
 }

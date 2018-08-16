@@ -18,6 +18,9 @@ func (rf *Raft) initLeader() {
 }
 
 func (rf *Raft) heartbeat(beatNumber int) {
+	P("H>", rf.me, rf.currentTerm, beatNumber)
+	startTime := time.Now()
+
 	rf.mu.Lock()
 	// leader check
 	if rf.phase != "leader" {
@@ -60,6 +63,7 @@ func (rf *Raft) heartbeat(beatNumber int) {
 	}
 
 	// adjusting follower indices depending on responses
+	P("H<", rf.me, rf.currentTerm, beatNumber)
 	for ID := 0; ID < len(rf.peers); ID++ {
 		if ID != rf.me {
 			if replies[ID].Success {
@@ -80,10 +84,11 @@ func (rf *Raft) heartbeat(beatNumber int) {
 	for i := maxCommit; i > rf.commitIndex; i-- {
 		if rf.log[i].Term == rf.currentTerm {
 			rf.commitIndex = i
+			go rf.applyEntries()
 			break
 		}
 	}
-	P("H", rf.me, rf.currentTerm, beatNumber, "| nextIndex", rf.nextIndex, "| matchIndex", rf.matchIndex, "| lastLogIndex", len(rf.log)-1)
+	P("H-", rf.me, rf.currentTerm, beatNumber, "| nextIndex", rf.nextIndex, "| matchIndex", rf.matchIndex, "| lastLogIndex", len(rf.log)-1, "| time", float64(time.Since(startTime).Nanoseconds())/1e9)
 	rf.mu.Unlock()
 
 	// recurse

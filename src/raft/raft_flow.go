@@ -1,14 +1,15 @@
 package raft
 
 // every server permanently runs this in a separate thread
+
 func (rf *Raft) applyEntries() {
 	rf.mu.Lock()
-	if rf.commitIndex > rf.lastApplied {
+	for rf.commitIndex > rf.lastApplied {
 		rf.lastApplied++
 		rf.applyCh <- ApplyMsg{CommandValid: true, Command: rf.log[rf.lastApplied].Data, CommandIndex: rf.lastApplied}
+		P(rf.me, "output", rf.lastApplied)
 	}
 	rf.mu.Unlock()
-	go rf.applyEntries()
 }
 
 func (rf *Raft) phaseChange(toPhase string, sync bool, reason string) (success bool) {

@@ -47,7 +47,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		}
 		rf.mu.Unlock()
 	}
-	P("RequestVote:", args.CandidateID, "<", rf.me, "|", otherTerm, "vs", myTerm, "| vote:", reply.VoteGranted)
+	P("RequestVote:", args.CandidateID, "<", rf.me, "|", otherTerm, "vs", myTerm, "| react", react, "| vote:", reply.VoteGranted)
 }
 
 // sendRequestVote ...

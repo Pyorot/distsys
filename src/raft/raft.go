@@ -17,9 +17,12 @@ package raft
 //   in the same server.
 //
 
-import "sync"
-import "labrpc"
-import "time"
+import (
+	"fmt"
+	"labrpc"
+	"sync"
+	"time"
+)
 
 // import "bytes"
 // import "labgob"s
@@ -51,8 +54,9 @@ type LogEntry struct {
 	Data interface{}
 }
 
-var electionTimeout = 850 * time.Millisecond
-var electionRandomisation = 150
+var steadyElectionTimeout = 850 * time.Millisecond
+var electionTimeout = 0 * time.Millisecond
+var electionRandomisation = 300
 var heartbeatTimeout = 105 * time.Millisecond
 
 var electionReset = make(chan bool)
@@ -165,8 +169,9 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 			rf.mu.Unlock()
 		}()
 		P(rf.me, "input o", term, command)
+	} else {
+		P(rf.me, "input x", command)
 	}
-	P(rf.me, "input x", command)
 	return
 }
 
@@ -178,9 +183,9 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 //
 func (rf *Raft) Kill() {
 	rf.mu.Lock()
-	time.Sleep(200 * time.Millisecond)
-	P(rf.me, rf.log, rf.commitIndex)
-	P(rf.me, "--test clear--")
+	// time.Sleep(200 * time.Millisecond)
+	fmt.Println(rf.me, rf.log, rf.commitIndex)
+	fmt.Println(rf.me, "--test clear--")
 	// Your code here, if desired.
 }
 
