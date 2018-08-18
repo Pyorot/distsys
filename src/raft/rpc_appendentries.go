@@ -52,8 +52,10 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		*/
 
 		// 3. update commitIndex
-		if len(args.Entries) > 0 && args.LeaderCommit > rf.commitIndex {
-			rf.commitIndex = Min(args.LeaderCommit, len(rf.log)-1)
+		newCommitIndex := Min(args.LeaderCommit, len(rf.log)-1)
+		// P("!!", rf.me, rf.commitIndex, newCommitIndex, args.LeaderCommit, len(rf.log)-1)
+		if newCommitIndex > rf.commitIndex {
+			rf.commitIndex = newCommitIndex // has def increased
 			go rf.applyEntries()
 		}
 		rf.mu.Unlock()

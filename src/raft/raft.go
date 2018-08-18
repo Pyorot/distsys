@@ -54,7 +54,7 @@ type LogEntry struct {
 	Data interface{}
 }
 
-var steadyElectionTimeout = 850 * time.Millisecond
+var steadyElectionTimeout = 500 * time.Millisecond
 var electionTimeout = 0 * time.Millisecond
 var electionRandomisation = 300
 var heartbeatTimeout = 105 * time.Millisecond
@@ -183,7 +183,7 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 //
 func (rf *Raft) Kill() {
 	rf.mu.Lock()
-	// time.Sleep(200 * time.Millisecond)
+	time.Sleep(200 * time.Millisecond)
 	fmt.Println(rf.me, rf.log, rf.commitIndex)
 	fmt.Println(rf.me, "--test clear--")
 	// Your code here, if desired.
