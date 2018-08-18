@@ -159,19 +159,17 @@ func (rf *Raft) readPersist(data []byte) {
 //
 func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) {
 	// Your code here (2B).
-	var logLength int
-	term, isLeader, logLength = rf.GetState()
-	index = logLength + 1 // I guess ???
+	rf.mu.Lock()
+	term = rf.currentTerm
+	isLeader = rf.phase == "leader"
 	if isLeader {
-		go func() {
-			rf.mu.Lock()
-			rf.log = append(rf.log, LogEntry{term, command})
-			rf.mu.Unlock()
-		}()
+		rf.log = append(rf.log, LogEntry{term, command})
+		index = len(rf.log) - 1 // I know Kappa
 		P(rf.me, "input o", term, command)
 	} else {
 		P(rf.me, "input x", command)
 	}
+	rf.mu.Unlock()
 	return
 }
 

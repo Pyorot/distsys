@@ -1,13 +1,11 @@
 package raft
 
-// every server permanently runs this in a separate thread
-
 func (rf *Raft) applyEntries() {
 	rf.mu.Lock()
 	for rf.commitIndex > rf.lastApplied {
 		rf.lastApplied++
 		rf.applyCh <- ApplyMsg{CommandValid: true, Command: rf.log[rf.lastApplied].Data, CommandIndex: rf.lastApplied}
-		P(rf.me, "output", rf.lastApplied)
+		P(rf.me, "output", rf.lastApplied, ":", rf.log[rf.lastApplied].Data)
 	}
 	rf.mu.Unlock()
 }
