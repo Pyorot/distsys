@@ -18,7 +18,6 @@ package raft
 //
 
 import (
-	"fmt"
 	"labrpc"
 	"sync"
 	"time"
@@ -57,7 +56,7 @@ type LogEntry struct {
 var steadyElectionTimeout = 500 * time.Millisecond
 var electionTimeout = 0 * time.Millisecond
 var electionRandomisation = 300
-var heartbeatTimeout = 105 * time.Millisecond
+var heartbeatTimeout = 50 * time.Millisecond
 
 var electionReset = make(chan bool)
 
@@ -182,8 +181,8 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 func (rf *Raft) Kill() {
 	rf.mu.Lock()
 	time.Sleep(200 * time.Millisecond)
-	fmt.Println(rf.me, rf.log, rf.commitIndex)
-	fmt.Println(rf.me, "--test clear--")
+	P(rf.me, rf.log, rf.commitIndex)
+	Q(rf.me, "--test clear--")
 	// Your code here, if desired.
 }
 

@@ -30,33 +30,17 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		rf.mu.Lock()
 		// 1. set success
 		reply.Success = len(rf.log) > args.PrevLogIndex && rf.log[args.PrevLogIndex].Term == args.PrevLogTerm
-		// 2. merge log
+
 		if reply.Success {
+			// 2. merge log
 			rf.log = append(rf.log[:args.PrevLogIndex+1], args.Entries...)
-		}
 
-		/*  OLD
-		// 2a. resolve conflicts
-		for i := 0; i < len(args.Entries) && i < len(rf.log)-1-args.PrevLogIndex; i++ {
-			if args.Entries[i].Term != rf.log[args.PrevLogIndex+1+i].Term {
-				rf.log = rf.log[:args.PrevLogIndex+1+i]
-				break
+			// 3. update commitIndex
+			newCommitIndex := Min(args.LeaderCommit, len(rf.log)-1)
+			if newCommitIndex > rf.commitIndex {
+				rf.commitIndex = newCommitIndex // has def increased
+				go rf.applyEntries()
 			}
-		}
-		// 2b. add payload
-		rf.log = append(rf.log, args.Entries[len(rf.log)-(args.PrevLogIndex+1):]...)
-		P("I:", rf.me, "; other:", args.LeaderID)
-		P(rf.log)
-		P(args.Entries)
-		P(args.PrevLogIndex)
-		*/
-
-		// 3. update commitIndex
-		newCommitIndex := Min(args.LeaderCommit, len(rf.log)-1)
-		// P("!!", rf.me, rf.commitIndex, newCommitIndex, args.LeaderCommit, len(rf.log)-1)
-		if newCommitIndex > rf.commitIndex {
-			rf.commitIndex = newCommitIndex // has def increased
-			go rf.applyEntries()
 		}
 		rf.mu.Unlock()
 	}

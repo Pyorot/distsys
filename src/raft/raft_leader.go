@@ -88,7 +88,7 @@ func (rf *Raft) heartbeat(beatNumber int) {
 			break
 		}
 	}
-	P("H-", rf.me, rf.currentTerm, beatNumber, "| next", rf.nextIndex, "| match", rf.matchIndex, "| commit", rf.commitIndex, "| lastLog", len(rf.log)-1, "| time", float64(time.Since(startTime).Nanoseconds())/1e9)
+	P("H-", rf.me, rf.currentTerm, beatNumber, "| next", rf.nextIndex, "| match", rf.matchIndex, "| commit", rf.commitIndex, "| log", rf.log, "| time", float64(time.Since(startTime).Nanoseconds())/1e9)
 	rf.mu.Unlock()
 
 	// recurse

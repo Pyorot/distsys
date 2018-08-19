@@ -20,7 +20,12 @@ func (rf *Raft) callElection() {
 	// set up vote
 	rf.currentTerm++
 	rf.votedFor = -1
-	term := rf.currentTerm
+	args := RequestVoteArgs{
+		Term:         rf.currentTerm,
+		CandidateID:  rf.me,
+		LastLogIndex: len(rf.log) - 1,
+	}
+	args.LastLogTerm = rf.log[args.LastLogIndex].Term
 	rf.mu.Unlock()
 	votes := make(chan bool, len(rf.peers))
 	voteCount := 0
@@ -32,11 +37,10 @@ func (rf *Raft) callElection() {
 			votes <- true
 			rf.votedFor = rf.me
 		} else {
-			args := RequestVoteArgs{Term: term, CandidateID: rf.me}
 			go rf.sendRequestVote(ID, &args, &replies[ID], votes)
 		}
 	}
-	P(rf.me, "requested votes |", term)
+	P(rf.me, "requested votes |", args.Term)
 	// await votes
 	for i := 0; i < len(rf.peers); i++ {
 		select {

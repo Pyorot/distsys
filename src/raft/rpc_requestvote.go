@@ -40,6 +40,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		if rf.votedFor == -1 || rf.votedFor == args.CandidateID {
 			myLastEntryIndex := len(rf.log) - 1
 			myLastEntryTerm := rf.log[myLastEntryIndex].Term
+			P("voter: index", myLastEntryIndex, "term", myLastEntryTerm, "| candidate: index:", args.LastLogIndex, "term:", args.LastLogTerm)
 			if args.LastLogTerm > myLastEntryTerm || (args.LastLogTerm == myLastEntryTerm && args.LastLogIndex >= myLastEntryIndex) {
 				reply.VoteGranted = true
 				rf.votedFor = args.CandidateID
