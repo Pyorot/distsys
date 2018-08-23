@@ -3,7 +3,7 @@
 
 ## ./src/raft - the project code
 * raft.go - interface functions, like the initiator `Make`, the data inputter `Start`
-* raft_flow.go - raft internals, functions running heartbeats, elections etc.
+* raft_[common/leader/follower/candidate].go - raft internals, functions running heartbeats, elections, etc.
 * raft_appendentries.go - AppendEntries RPC send/receive structs + functions
 * raft_requestvote.go - RequestVote RPC send/receive structs + functions
 
