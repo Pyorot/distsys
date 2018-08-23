@@ -161,7 +161,7 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 	rf.mu.Lock()
 	term = rf.currentTerm
 	isLeader = rf.phase == "leader"
-	if isLeader {
+	if isLeader { // have lock so can reliably determine index
 		rf.log = append(rf.log, LogEntry{term, command})
 		index = len(rf.log) - 1 // I know Kappa
 		P(rf.me, "input o", term, command)
@@ -179,7 +179,7 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 // turn off debug output from this instance.
 //
 func (rf *Raft) Kill() {
-	rf.mu.Lock()
+	rf.mu.Lock() // to stop Raft instance (can't terminate process between tests)
 	time.Sleep(200 * time.Millisecond)
 	P(rf.me, rf.log, rf.commitIndex)
 	Q(rf.me, "--test clear--")
@@ -209,7 +209,6 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	// Your initialization code here (2A, 2B, 2C).
 	rf.votedFor = -1
 	rf.phaseChange("follower", false, "init")
-	go rf.applyEntries()
 
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())

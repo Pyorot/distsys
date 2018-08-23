@@ -7,6 +7,7 @@ import (
 
 func (rf *Raft) initLeader() {
 	rf.mu.Lock()
+	// re-initialise nextIndex, matchIndex
 	rf.nextIndex = make([]int, len(rf.peers))
 	for i := range rf.nextIndex {
 		rf.nextIndex[i] = len(rf.log)
@@ -19,7 +20,7 @@ func (rf *Raft) initLeader() {
 
 func (rf *Raft) heartbeat(beatNumber int) {
 	P("H>", rf.me, rf.currentTerm, beatNumber)
-	startTime := time.Now()
+	startTime := time.Now() // for benchmarking
 
 	rf.mu.Lock()
 	// leader check
@@ -30,7 +31,7 @@ func (rf *Raft) heartbeat(beatNumber int) {
 	}
 	// send heartbeats
 	replies := make([]AppendEntriesReply, len(rf.peers))
-	myLastIndex := len(rf.log) - 1
+	myLastIndex := len(rf.log) - 1 // why is this here?????
 	for ID := 0; ID < len(rf.peers); ID++ {
 		if ID != rf.me {
 			go func(ID int) {
@@ -66,7 +67,7 @@ func (rf *Raft) heartbeat(beatNumber int) {
 	P("H<", rf.me, rf.currentTerm, beatNumber)
 	for ID := 0; ID < len(rf.peers); ID++ {
 		if ID != rf.me {
-			if replies[ID].Success {
+			if replies[ID].Success { // implicity times out RPC response
 				rf.nextIndex[ID], rf.matchIndex[ID] = myLastIndex+1, myLastIndex
 			} else if rf.nextIndex[ID] >= 2 {
 				rf.nextIndex[ID]--
@@ -79,10 +80,11 @@ func (rf *Raft) heartbeat(beatNumber int) {
 	copy(sortedMatchIndex, rf.matchIndex)
 	sortedMatchIndex[rf.me] = 0
 	sort.Ints(sortedMatchIndex)
+	// maxCommit = maximal matchIndex s.t. strict majority ≥ it
+	// e.g. len=7 [∞*, 2,4,5,6*,8*,8*] → 6; len=8: [∞*, 1,7,7,7*,8*,9*,9*] → 7
 	maxCommit := Min(sortedMatchIndex[(len(sortedMatchIndex)+1)/2], len(rf.log)-1)
-	// 7: [∞*, 2,4,5,6*,8*,8*] = 6; 8: [∞*, 1,7,7,7*,8*,9*,9*] = 7
-	for i := maxCommit; i > rf.commitIndex; i-- {
-		if rf.log[i].Term == rf.currentTerm {
+	for i := maxCommit; i > rf.commitIndex; i-- { // find maximal commitIndex
+		if rf.log[i].Term == rf.currentTerm { // satisfying this
 			rf.commitIndex = i
 			go rf.applyEntries()
 			break

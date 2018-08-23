@@ -1,6 +1,6 @@
 package raft
 
-func (rf *Raft) applyEntries() {
+func (rf *Raft) applyEntries() { // called whenever commitIndex is incremented
 	rf.mu.Lock()
 	for rf.commitIndex > rf.lastApplied {
 		rf.lastApplied++
@@ -35,19 +35,18 @@ func (rf *Raft) phaseChange(toPhase string, sync bool, reason string) (success b
 }
 
 func (rf *Raft) termSync(otherTerm int, RPCName string, senderReceiver string) (outcome int, myTerm int) {
+	// syncs terms during RPC exchange, returns sgn(myTerm - otherTerm)
 	rf.mu.Lock()
 	myTerm = rf.currentTerm
-	if myTerm < otherTerm {
+
+	if myTerm < otherTerm { // update term, become follower
 		rf.currentTerm = otherTerm
-		rf.votedFor = -1
+		rf.votedFor = -1 // resets upon term increase
 		rf.mu.Unlock()
 		rf.phaseChange("follower", false, "tS fail ("+RPCName+" "+senderReceiver+")")
 		return -1, myTerm
 	} else if myTerm == otherTerm {
 		rf.mu.Unlock()
-		if senderReceiver == "receiver" {
-			go func() { electionReset <- true }()
-		}
 		return 0, myTerm
 	} else {
 		rf.mu.Unlock()

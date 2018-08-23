@@ -21,12 +21,12 @@ func (rf *Raft) awaitElection() {
 	// continue after election timeout (recurse or > candidate)
 	timeout := (time.Duration(rand.Intn(electionRandomisation)) * time.Millisecond) + electionTimeout
 	select {
-	case <-electionReset:
+	case <-electionReset: // triggered by newer leader
 		P(rf.me, "- follower | reset")
 		go rf.awaitElection()
 	case <-time.After(timeout):
 		rf.phaseChange("candidate", false, "timeout")
 		P(rf.me, "x follower")
 	}
-	electionTimeout = steadyElectionTimeout
+	electionTimeout = steadyElectionTimeout // = 0 at first run
 }

@@ -19,7 +19,7 @@ func (rf *Raft) callElection() {
 	}
 	// set up vote
 	rf.currentTerm++
-	rf.votedFor = -1
+	rf.votedFor = -1 // reset on each new term
 	args := RequestVoteArgs{
 		Term:         rf.currentTerm,
 		CandidateID:  rf.me,
@@ -27,7 +27,7 @@ func (rf *Raft) callElection() {
 	}
 	args.LastLogTerm = rf.log[args.LastLogIndex].Term
 	rf.mu.Unlock()
-	votes := make(chan bool, len(rf.peers))
+	votes := make(chan bool, len(rf.peers)) // to collect votes
 	voteCount := 0
 	majority := int(math.Ceil(float64(len(rf.peers)) / 2))
 	// request votes via RequestVote RPC
@@ -48,12 +48,11 @@ func (rf *Raft) callElection() {
 			if vote {
 				voteCount++
 			}
-		case <-electionReset:
+		case <-electionReset: // triggered by newer leader
 			rf.phaseChange("follower", false, "vote interrupt")
 			P(rf.me, "x candidate")
 			return
 		}
-		// case 3: explicit election timeout?
 		if voteCount >= majority {
 			break
 		}
@@ -71,8 +70,10 @@ func (rf *Raft) callElection() {
 
 	// continue
 	if voteCount >= majority {
+		// synchronous (want leader working asap)
 		rf.phaseChange("leader", true, "elected ("+strconv.Itoa(voteCount)+" votes; term "+strconv.Itoa(rf.currentTerm)+")")
 	} else {
+		// async (low priority)
 		rf.phaseChange("follower", false, "lost vote")
 	}
 	P(rf.me, "x candidate")

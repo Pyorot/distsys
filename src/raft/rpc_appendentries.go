@@ -20,6 +20,7 @@ type AppendEntriesReply struct {
 
 // AppendEntries ...
 func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply) {
+	// term sync
 	otherTerm := args.Term
 	outcome, myTerm := rf.termSync(otherTerm, "AppendEntries", "receiver")
 	react := outcome <= 0 // tS react: should I react to this RPC at all?
@@ -27,6 +28,8 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 
 	// payload
 	if react {
+		go func() { electionReset <- true }()
+
 		rf.mu.Lock()
 		// 1. set success
 		reply.Success = len(rf.log) > args.PrevLogIndex && rf.log[args.PrevLogIndex].Term == args.PrevLogTerm
@@ -51,11 +54,14 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *AppendEntriesReply) (ok bool) {
 	P("AppendEntries:", rf.me, ">", server)
 	ok = rf.peers[server].Call("Raft.AppendEntries", args, reply)
+
 	// await reply here
-	if !ok {
+	if !ok { // i.e. RPC timeout
 		P("AppendEntries:", rf.me, "?", server)
 		return
 	}
+
+	// term sync
 	otherTerm := reply.Term
 	_, myTerm := rf.termSync(otherTerm, "AppendEntries", "sender")
 	P("AppendEntries:", rf.me, "-", server, "|", myTerm, "vs", otherTerm)

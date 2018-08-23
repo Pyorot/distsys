@@ -28,7 +28,7 @@ type RequestVoteReply struct {
 // example RequestVote RPC handler.
 //
 func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
-	// Your code here (2A, 2B).
+	// term sync
 	otherTerm := args.Term
 	outcome, myTerm := rf.termSync(otherTerm, "RequestVote", "receiver")
 	react := outcome <= 0 // tS react: should I react to this RPC at all?
@@ -37,11 +37,11 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// payload
 	if react {
 		rf.mu.Lock()
-		if rf.votedFor == -1 || rf.votedFor == args.CandidateID {
+		if rf.votedFor == -1 || rf.votedFor == args.CandidateID { // vote for at most one per term
 			myLastEntryIndex := len(rf.log) - 1
 			myLastEntryTerm := rf.log[myLastEntryIndex].Term
 			P("voter: index", myLastEntryIndex, "term", myLastEntryTerm, "| candidate: index:", args.LastLogIndex, "term:", args.LastLogTerm)
-			if args.LastLogTerm > myLastEntryTerm || (args.LastLogTerm == myLastEntryTerm && args.LastLogIndex >= myLastEntryIndex) {
+			if args.LastLogTerm > myLastEntryTerm || (args.LastLogTerm == myLastEntryTerm && args.LastLogIndex >= myLastEntryIndex) { // data up-to-date test
 				reply.VoteGranted = true
 				rf.votedFor = args.CandidateID
 			}
@@ -83,12 +83,15 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply, doneCh chan bool) (ok bool) {
 	P("RequestVote:", rf.me, ">", server)
 	ok = rf.peers[server].Call("Raft.RequestVote", args, reply)
+
 	// await reply here
 	if !ok {
 		doneCh <- false
 		P("RequestVote:", rf.me, "?", server)
 		return
 	}
+
+	// term sync
 	otherTerm := reply.Term
 	_, myTerm := rf.termSync(otherTerm, "RequestVote", "sender")
 	doneCh <- reply.VoteGranted // could deadlock
