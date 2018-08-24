@@ -1,6 +1,5 @@
-- Start(command) check the index return
-- check if logs should have type []LogEntry or []*LogEntry
-
+- // check if logs should have type []LogEntry or []*LogEntry
+- check notes in raft paper about nextIndex optimisation
 
 
 

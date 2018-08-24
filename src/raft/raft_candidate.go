@@ -36,6 +36,7 @@ func (rf *Raft) callElection() {
 		if ID == rf.me && (rf.votedFor == -1 || rf.votedFor == rf.me) {
 			votes <- true
 			rf.votedFor = rf.me
+			rf.persist()
 		} else {
 			go rf.sendRequestVote(ID, &args, &replies[ID], votes)
 		}

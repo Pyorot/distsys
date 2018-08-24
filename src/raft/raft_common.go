@@ -42,6 +42,7 @@ func (rf *Raft) termSync(otherTerm int, RPCName string, senderReceiver string) (
 	if myTerm < otherTerm { // update term, become follower
 		rf.currentTerm = otherTerm
 		rf.votedFor = -1 // resets upon term increase
+		rf.persist()
 		rf.mu.Unlock()
 		rf.phaseChange("follower", false, "tS fail ("+RPCName+" "+senderReceiver+")")
 		return -1, myTerm

@@ -1,0 +1,12 @@
+currentTerm edits:
+ – new election (candidate)         x
+ – RPC Term Sync		    during termSync
+
+votedFor edits:
+ [the above]
+ – candidate voting for self	    o
+ – voter voting for someone	    during RequestVote handler
+
+log edits:
+ – leader receiving data (Start)    x
+ – follower merging log		    during AppendEntries handler

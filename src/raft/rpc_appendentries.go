@@ -46,6 +46,8 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 				rf.commitIndex = newCommitIndex // has def increased
 				go rf.applyEntries()
 			}
+
+			rf.persist()
 		}
 		rf.mu.Unlock()
 	}

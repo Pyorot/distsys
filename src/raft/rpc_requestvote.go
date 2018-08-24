@@ -44,6 +44,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 			if args.LastLogTerm > myLastEntryTerm || (args.LastLogTerm == myLastEntryTerm && args.LastLogIndex >= myLastEntryIndex) { // data up-to-date test
 				reply.VoteGranted = true
 				rf.votedFor = args.CandidateID
+				rf.persist()
 			}
 		}
 		rf.mu.Unlock()
