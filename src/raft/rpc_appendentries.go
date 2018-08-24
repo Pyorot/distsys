@@ -14,8 +14,9 @@ type AppendEntriesArgs struct {
 
 // AppendEntriesReply ...
 type AppendEntriesReply struct {
-	Term    int
-	Success bool
+	Term      int
+	Success   bool
+	LogLength int
 }
 
 // AppendEntries ...
@@ -31,8 +32,9 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 		go func() { electionReset <- true }()
 
 		rf.mu.Lock()
-		// 1. set success
+		// 1. set Success, LogLength
 		reply.Success = len(rf.log) > args.PrevLogIndex && rf.log[args.PrevLogIndex].Term == args.PrevLogTerm
+		reply.LogLength = len(rf.log)
 
 		if reply.Success {
 			// 2. merge log
