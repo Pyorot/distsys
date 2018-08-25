@@ -608,24 +608,34 @@ func TestPersist32C3(t *testing.T) {
 
 	cfg.begin("Test (2C): partitioned leader and one follower crash, leader restarts")
 
+	Q("TEST: 101 goes in")
 	cfg.one(101, 3, true)
 
 	leader := cfg.checkOneLeader()
+	Q("TEST: FOLLOWER", (leader+2)%servers, "DISCONNECT")
 	cfg.disconnect((leader + 2) % servers)
 
+	Q("TEST: 102 goes in")
 	cfg.one(102, 2, true)
 
+	Q("TEST: LEADER", (leader+0)%servers, "CRASH")
 	cfg.crash1((leader + 0) % servers)
+	Q("TEST: FOLLOWER", (leader+1)%servers, "CRASH")
 	cfg.crash1((leader + 1) % servers)
+	Q("TEST:", (leader+2)%servers, "RECONNECT")
 	cfg.connect((leader + 2) % servers)
+	Q("TEST:", (leader+0)%servers, "RESTART + CONNECT")
 	cfg.start1((leader + 0) % servers)
 	cfg.connect((leader + 0) % servers)
 
+	Q("TEST: 103 goes in")
 	cfg.one(103, 2, true)
 
+	Q("TEST:", (leader+1)%servers, "RESTART + CONNECT")
 	cfg.start1((leader + 1) % servers)
 	cfg.connect((leader + 1) % servers)
 
+	Q("TEST: 104 goes in")
 	cfg.one(104, servers, true)
 
 	cfg.end()

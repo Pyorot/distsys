@@ -8,5 +8,5 @@ votedFor edits:
  – voter voting for someone	    during RequestVote handler
 
 log edits:
- – leader receiving data (Start)    x
+ – leader receiving data (Start)    o
  – follower merging log		    during AppendEntries handler

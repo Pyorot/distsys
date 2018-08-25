@@ -1,1346 +1,290 @@
+0 loaded state | currentTerm= 0 | votedFor= -1 | log= [{0 <nil>}]
 0 → follower | init
+1 loaded state | currentTerm= 0 | votedFor= -1 | log= [{0 <nil>}]
 1 → follower | init
+2 loaded state | currentTerm= 0 | votedFor= -1 | log= [{0 <nil>}]
 2 → follower | init
-Test (2A): election after network failure ...
-2 → candidate | timeout
-2 x follower
-2 requested votes | 1
-RequestVote: 2 > 0
-RequestVote: 2 > 1
-1 - follower | tS fail (RequestVote receiver)
-voter: index 0 term 0 | candidate: index: 0 term: 0
-RequestVote: 2 < 1 | 1 vs 0 | react true | vote: true
+Test (2C): partitioned leader and one follower crash, leader restarts ...
+TEST: 101 goes in
+1 input x 101
+2 input x 101
+0 input x 101
+1 → candidate | timeout
+1 x follower
+RequestVote: 1 > 0
+1 saved
+1 requested votes | 1
+RequestVote: 1 > 2
+0 saved
 0 - follower | tS fail (RequestVote receiver)
 voter: index 0 term 0 | candidate: index: 0 term: 0
-RequestVote: 2 < 0 | 1 vs 0 | react true | vote: true
-RequestVote: 2 - 1 | 1 vs 0
-1 - follower | reset
-RequestVote: 2 - 0 | 1 vs 0
+0 saved
+RequestVote: 1 < 0 | 1 vs 0 | react true | vote: true
+2 saved
+2 - follower | tS fail (RequestVote receiver)
+voter: index 0 term 0 | candidate: index: 0 term: 0
+2 saved
+RequestVote: 1 < 2 | 1 vs 0 | react true | vote: true
+RequestVote: 1 - 0 | 1 vs 0
+1 received votes
+1 → leader | elected (2 votes; term 1)
+H> 1 1 1
+AppendEntries: 1 > 0
+AppendEntries: 1 > 2
+RequestVote: 1 - 2 | 1 vs 0
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
 0 - follower | reset
-2 received votes
-2 → leader | elected (2 votes; term 1)
-H> 2 1 1
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 1 vs 1 | react true | success true
-1 - follower | reset
+2 - follower | reset
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
+AppendEntries: 1 - 0 | 1 vs 1
+AppendEntries: 1 - 2 | 1 vs 1
+1 input o 1 101
+H< 1 1 1
+H- 1 1 1 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>} {1 101}] | time 0.0507597
+H> 1 1 2
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+0 saved
+2 - follower | reset
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
 0 - follower | reset
-AppendEntries: 2 < 0 | 1 vs 1 | react true | success true
-AppendEntries: 2 - 1 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
-H< 2 1 1
-H- 2 1 1 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508717
-H> 2 1 2
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 1 vs 1 | react true | success true
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
+AppendEntries: 1 - 0 | 1 vs 1
+AppendEntries: 1 - 2 | 1 vs 1
+H< 1 1 2
+H- 1 1 2 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101}] | time 0.0508911
+H> 1 1 3
+AppendEntries: 1 > 2
+1 output 1 : 101
+AppendEntries: 1 > 0
 0 - follower | reset
-1 - follower | reset
-AppendEntries: 2 < 0 | 1 vs 1 | react true | success true
-AppendEntries: 2 - 1 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
-H< 2 1 2
-H- 2 1 2 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509417
-H> 2 1 3
-AppendEntries: 2 > 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 0 | 1 vs 1 | react true | success true
-AppendEntries: 2 < 1 | 1 vs 1 | react true | success true
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
+AppendEntries: 1 - 2 | 1 vs 1
+2 output 1 : 101
+AppendEntries: 1 - 0 | 1 vs 1
+2 - follower | reset
+0 output 1 : 101
+H< 1 1 3
+H- 1 1 3 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101}] | time 0.0508785
+H> 1 1 4
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
 0 - follower | reset
-1 - follower | reset
-AppendEntries: 2 - 0 | 1 vs 1
-AppendEntries: 2 - 1 | 1 vs 1
-H< 2 1 3
-H- 2 1 3 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508171
-H> 2 1 4
-AppendEntries: 2 > 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 1 vs 1 | react true | success true
-AppendEntries: 2 < 0 | 1 vs 1 | react true | success true
+2 - follower | reset
+AppendEntries: 1 - 0 | 1 vs 1
+AppendEntries: 1 - 2 | 1 vs 1
+H< 1 1 4
+H- 1 1 4 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101}] | time 0.0508581
+H> 1 1 5
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
 0 - follower | reset
-1 - follower | reset
-AppendEntries: 2 - 1 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
-H< 2 1 4
-H- 2 1 4 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0504712
-H> 2 1 5
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 0 | 1 vs 1 | react true | success true
+2 - follower | reset
+AppendEntries: 1 - 2 | 1 vs 1
+AppendEntries: 1 - 0 | 1 vs 1
+H< 1 1 5
+H- 1 1 5 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101}] | time 0.0508365
+H> 1 1 6
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
 0 - follower | reset
-AppendEntries: 2 - 0 | 1 vs 1
-AppendEntries: 2 < 1 | 1 vs 1 | react true | success true
-1 - follower | reset
-AppendEntries: 2 - 1 | 1 vs 1
-H< 2 1 5
-H- 2 1 5 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518695
-H> 2 1 6
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 1 vs 1 | react true | success true
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
+2 - follower | reset
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
+AppendEntries: 1 - 0 | 1 vs 1
+AppendEntries: 1 - 2 | 1 vs 1
+H< 1 1 6
+H- 1 1 6 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101}] | time 0.0519321
+H> 1 1 7
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
+2 - follower | reset
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
 0 - follower | reset
-AppendEntries: 2 - 1 | 1 vs 1
-AppendEntries: 2 < 0 | 1 vs 1 | react true | success true
-1 - follower | reset
-AppendEntries: 2 - 0 | 1 vs 1
-H< 2 1 6
-H- 2 1 6 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508552
-H> 2 1 7
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 0 | 1 vs 1 | react true | success true
-1 - follower | reset
+AppendEntries: 1 - 0 | 1 vs 1
+AppendEntries: 1 - 2 | 1 vs 1
+H< 1 1 7
+H- 1 1 7 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101}] | time 0.0508376
+H> 1 1 8
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+2 - follower | reset
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
 0 - follower | reset
-AppendEntries: 2 < 1 | 1 vs 1 | react true | success true
-AppendEntries: 2 - 0 | 1 vs 1
-AppendEntries: 2 - 1 | 1 vs 1
-H< 2 1 7
-H- 2 1 7 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508649
-H> 2 1 8
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 1 vs 1 | react true | success true
-AppendEntries: 2 < 0 | 1 vs 1 | react true | success true
-1 - follower | reset
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
+AppendEntries: 1 - 2 | 1 vs 1
+AppendEntries: 1 - 0 | 1 vs 1
+H< 1 1 8
+H- 1 1 8 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101}] | time 0.0518576
+H> 1 1 9
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+2 - follower | reset
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
 0 - follower | reset
-AppendEntries: 2 - 1 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
-H< 2 1 8
-H- 2 1 8 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0502442
-H> 2 1 9
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 < 1 | 1 vs 1 | react true | success true
-AppendEntries: 2 < 0 | 1 vs 1 | react true | success true
-1 - follower | reset
+AppendEntries: 1 - 0 | 1 vs 1
+AppendEntries: 1 - 2 | 1 vs 1
+H< 1 1 9
+H- 1 1 9 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101}] | time 0.0518605
+H> 1 1 10
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
 0 - follower | reset
-AppendEntries: 2 - 1 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
-H< 2 1 9
-H- 2 1 9 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518656
-H> 2 1 10
-AppendEntries: 2 > 0
-AppendEntries: 2 > 1
-AppendEntries: 2 < 1 | 1 vs 1 | react true | success true
-1 - follower | reset
-AppendEntries: 2 < 0 | 1 vs 1 | react true | success true
+2 - follower | reset
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
+AppendEntries: 1 - 2 | 1 vs 1
+AppendEntries: 1 - 0 | 1 vs 1
+H< 1 1 10
+H- 1 1 10 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101}] | time 0.0518616
+H> 1 1 11
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
+2 - follower | reset
 0 - follower | reset
-AppendEntries: 2 - 1 | 1 vs 1
-AppendEntries: 2 - 0 | 1 vs 1
-H< 2 1 10
-H- 2 1 10 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0504115
-H> 2 1 11
-AppendEntries: 2 > 0
-AppendEntries: 2 > 1
-H< 2 1 11
-H- 2 1 11 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.05087
-H> 2 1 12
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 2 1 12
-H- 2 1 12 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0502351
-H> 2 1 13
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 2 1 13
-H- 2 1 13 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508791
-H> 2 1 14
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 2 1 14
-H- 2 1 14 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508569
-H> 2 1 15
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 2 1 15
-H- 2 1 15 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.050853
-H> 2 1 16
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 2 1 16
-H- 2 1 16 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508586
-H> 2 1 17
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 2 1 17
-H- 2 1 17 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508632
-H> 2 1 18
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 2 1 18
-H- 2 1 18 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509206
-H> 2 1 19
-AppendEntries: 2 > 0
-AppendEntries: 2 > 1
-H< 2 1 19
-H- 2 1 19 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.050829
-H> 2 1 20
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 2 1 20
-H- 2 1 20 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508279
-H> 2 1 21
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
+AppendEntries: 1 - 0 | 1 vs 1
+AppendEntries: 1 - 2 | 1 vs 1
+H< 1 1 11
+H- 1 1 11 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101}] | time 0.0508632
+H> 1 1 12
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+0 - follower | reset
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
+2 - follower | reset
+AppendEntries: 1 - 0 | 1 vs 1
+AppendEntries: 1 - 2 | 1 vs 1
+H< 1 1 12
+H- 1 1 12 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101}] | time 0.0508996
+H> 1 1 13
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
+0 - follower | reset
+2 - follower | reset
+0 saved
+AppendEntries: 1 < 0 | 1 vs 1 | react true | success true
+AppendEntries: 1 - 2 | 1 vs 1
+AppendEntries: 1 - 0 | 1 vs 1
+TEST: FOLLOWER 0 DISCONNECT
+TEST: 102 goes in
+1 input o 1 102
+H< 1 1 13
+H- 1 1 13 | next [2 1 2] | match [1 0 1] | commit 1 | log [{0 <nil>} {1 101} {1 102}] | time 0.0509201
+H> 1 1 14
+AppendEntries: 1 > 2
+AppendEntries: 1 > 0
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
+2 - follower | reset
+AppendEntries: 1 - 2 | 1 vs 1
+H< 1 1 14
+H- 1 1 14 | next [1 1 3] | match [1 0 2] | commit 2 | log [{0 <nil>} {1 101} {1 102}] | time 0.0517689
+H> 1 1 15
+AppendEntries: 1 > 2
+1 output 2 : 102
+AppendEntries: 1 > 0
+0 - follower | reset
+2 saved
+AppendEntries: 1 < 2 | 1 vs 1 | react true | success true
+2 output 2 : 102
+AppendEntries: 1 - 2 | 1 vs 1
+TEST: LEADER 1 CRASH
+1 [{0 <nil>} {1 101} {1 102}] 2
+1 --test clear--
+TEST: FOLLOWER 2 CRASH
+2 [{0 <nil>} {1 101} {1 102}] 2
+2 --test clear--
+TEST: 0 RECONNECT
+TEST: 1 RESTART + CONNECT
+1 loaded state | currentTerm= 1 | votedFor= 1 | log= [{0 <nil>}]
+1 → follower | init
+TEST: 103 goes in
+1 input x 103
+0 input x 103
+1 input x 103
+0 input x 103
+1 input x 103
+0 input x 103
+1 input x 103
+0 input x 103
 0 → candidate | timeout
 0 x follower
+0 saved
 0 requested votes | 2
-RequestVote: 0 > 1
 RequestVote: 0 > 2
+RequestVote: 0 > 1
+1 saved
 1 - follower | tS fail (RequestVote receiver)
-voter: index 0 term 0 | candidate: index: 0 term: 0
+voter: index 0 term 0 | candidate: index: 1 term: 1
+1 saved
 RequestVote: 0 < 1 | 2 vs 1 | react true | vote: true
-1 - follower | reset
 RequestVote: 0 - 1 | 2 vs 1
 0 received votes
 0 → leader | elected (2 votes; term 2)
 H> 0 2 1
 AppendEntries: 0 > 2
 AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-1 - follower | reset
+AppendEntries: 0 < 1 | 2 vs 2 | react true | success false
+2 - follower | reset
 AppendEntries: 0 - 1 | 2 vs 2
-H< 2 1 21
-H- 2 1 21 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508621
-H> 2 1 22
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
+1 input x 103
+0 input o 2 103
 H< 0 2 1
-H- 0 2 1 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508837
+H- 0 2 1 | next [2 1 1] | match [0 0 0] | commit 1 | log [{0 <nil>} {1 101} {2 103}] | time 0.0508433
 H> 0 2 2
 AppendEntries: 0 > 2
 AppendEntries: 0 > 1
+1 saved
 AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
 1 - follower | reset
+1 output 1 : 101
 AppendEntries: 0 - 1 | 2 vs 2
-H< 2 1 22
-H- 2 1 22 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508956
-H> 2 1 23
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
 H< 0 2 2
-H- 0 2 2 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508205
+H- 0 2 2 | next [2 3 1] | match [0 2 0] | commit 2 | log [{0 <nil>} {1 101} {2 103}] | time 0.0508854
 H> 0 2 3
 AppendEntries: 0 > 2
+0 output 2 : 103
 AppendEntries: 0 > 1
+1 saved
 AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
 1 - follower | reset
+1 output 2 : 103
 AppendEntries: 0 - 1 | 2 vs 2
-H< 2 1 23
-H- 2 1 23 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508324
-H> 2 1 24
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 0 2 3
-H- 0 2 3 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508598
-H> 0 2 4
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-1 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-H< 2 1 24
-H- 2 1 24 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509519
-H> 2 1 25
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 0 2 4
-H- 0 2 4 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518576
-H> 0 2 5
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-1 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-H< 2 1 25
-H- 2 1 25 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0507762
-H> 2 1 26
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 ? 1
-H< 0 2 5
-H- 0 2 5 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509473
-H> 0 2 6
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-1 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-H< 2 1 26
-H- 2 1 26 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508666
-H> 2 1 27
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 0 2 6
-H- 0 2 6 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518167
-H> 0 2 7
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-1 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-H< 2 1 27
-H- 2 1 27 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508694
-H> 2 1 28
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-AppendEntries: 2 ? 1
-H< 0 2 7
-H- 0 2 7 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0503682
-H> 0 2 8
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-1 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-H< 2 1 28
-H- 2 1 28 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0504012
-H> 2 1 29
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 0 2 8
-H- 0 2 8 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509007
-H> 0 2 9
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-1 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-H< 2 1 29
-H- 2 1 29 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509582
-H> 2 1 30
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 0 2 9
-H- 0 2 9 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0505731
-H> 0 2 10
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-1 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-H< 2 1 30
-H- 2 1 30 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0506015
-H> 2 1 31
-AppendEntries: 2 > 1
-AppendEntries: 2 > 0
-H< 0 2 10
-H- 0 2 10 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0505309
-H> 0 2 11
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-1 - follower | reset
-2 → follower | tS fail (AppendEntries receiver)
-AppendEntries: 0 < 2 | 2 vs 1 | react true | success true
-1 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-AppendEntries: 0 - 2 | 2 vs 1
-2 x leader (2)
-2 x candidate
-H< 0 2 11
-H- 0 2 11 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0502778
-H> 0 2 12
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 2 | 2 vs 2 | react true | success true
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-AppendEntries: 0 - 2 | 2 vs 2
-1 - follower | reset
-2 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-H< 0 2 12
-H- 0 2 12 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518246
-H> 0 2 13
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 2 | 2 vs 2 | react true | success true
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-1 - follower | reset
-2 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-AppendEntries: 0 - 2 | 2 vs 2
-H< 0 2 13
-H- 0 2 13 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508723
-H> 0 2 14
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 2 | 2 vs 2 | react true | success true
-2 - follower | reset
-1 - follower | reset
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-AppendEntries: 0 - 2 | 2 vs 2
-AppendEntries: 0 - 1 | 2 vs 2
-H< 0 2 14
-H- 0 2 14 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508154
-H> 0 2 15
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-AppendEntries: 0 < 2 | 2 vs 2 | react true | success true
-AppendEntries: 0 - 1 | 2 vs 2
-1 - follower | reset
-2 - follower | reset
-AppendEntries: 0 - 2 | 2 vs 2
-RequestVote: 0 ? 2
-AppendEntries: 2 ? 1
-H< 0 2 15
-H- 0 2 15 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0516931
-H> 0 2 16
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 2 | 2 vs 2 | react true | success true
-2 - follower | reset
-1 - follower | reset
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-AppendEntries: 0 - 2 | 2 vs 2
-AppendEntries: 0 - 1 | 2 vs 2
-H< 0 2 16
-H- 0 2 16 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508922
-H> 0 2 17
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 2 | 2 vs 2 | react true | success true
-2 - follower | reset
-1 - follower | reset
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-AppendEntries: 0 - 2 | 2 vs 2
-AppendEntries: 0 - 1 | 2 vs 2
-H< 0 2 17
-H- 0 2 17 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0506544
-H> 0 2 18
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-AppendEntries: 0 < 2 | 2 vs 2 | react true | success true
-2 - follower | reset
-1 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-AppendEntries: 0 - 2 | 2 vs 2
-H< 0 2 18
-H- 0 2 18 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508427
-H> 0 2 19
-AppendEntries: 0 > 1
-AppendEntries: 0 > 2
-AppendEntries: 0 < 1 | 2 vs 2 | react true | success true
-AppendEntries: 0 < 2 | 2 vs 2 | react true | success true
-2 - follower | reset
-1 - follower | reset
-AppendEntries: 0 - 1 | 2 vs 2
-AppendEntries: 0 - 2 | 2 vs 2
-H< 0 2 19
-H- 0 2 19 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518622
-H> 0 2 20
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-H< 0 2 20
-H- 0 2 20 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508791
-H> 0 2 21
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 21
-H- 0 2 21 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.050883
-H> 0 2 22
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-H< 0 2 22
-H- 0 2 22 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508604
-H> 0 2 23
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 23
-H- 0 2 23 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508831
-H> 0 2 24
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 24
-H- 0 2 24 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518502
-H> 0 2 25
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 25
-H- 0 2 25 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508244
-H> 0 2 26
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 26
-H- 0 2 26 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508746
-H> 0 2 27
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-H< 0 2 27
-H- 0 2 27 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509428
-H> 0 2 28
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 28
-H- 0 2 28 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508643
-H> 0 2 29
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-1 → candidate | timeout
-1 x follower
-1 requested votes | 3
-RequestVote: 1 > 2
-RequestVote: 1 > 0
-AppendEntries: 0 ? 2
-H< 0 2 29
-H- 0 2 29 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0507767
-H> 0 2 30
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 30
-H- 0 2 30 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0507819
-H> 0 2 31
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-H< 0 2 31
-H- 0 2 31 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509479
-H> 0 2 32
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-2 → candidate | timeout
-2 x follower
-2 requested votes | 3
-RequestVote: 2 > 1
-RequestVote: 2 > 0
-H< 0 2 32
-H- 0 2 32 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508654
-H> 0 2 33
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 33
-H- 0 2 33 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508075
-H> 0 2 34
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-RequestVote: 2 ? 1
-H< 0 2 34
-H- 0 2 34 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508392
-H> 0 2 35
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 35
-H- 0 2 35 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508638
-H> 0 2 36
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 36
-H- 0 2 36 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508671
-H> 0 2 37
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 37
-H- 0 2 37 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508001
-H> 0 2 38
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H< 0 2 38
-H- 0 2 38 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518678
-H> 0 2 39
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-H< 0 2 39
-H- 0 2 39 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508558
-H> 0 2 40
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-H< 0 2 40
-H- 0 2 40 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509263
-H> 0 2 41
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 41
-H- 0 2 41 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508768
-H> 0 2 42
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-H< 0 2 42
-H- 0 2 42 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0507984
-H> 0 2 43
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-H< 0 2 43
-H- 0 2 43 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0507698
-H> 0 2 44
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-H< 0 2 44
-H- 0 2 44 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508257
-H> 0 2 45
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 45
-H- 0 2 45 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508626
-H> 0 2 46
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 46
-H- 0 2 46 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508631
-H> 0 2 47
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 2 ? 0
-AppendEntries: 0 ? 2
-H< 0 2 47
-H- 0 2 47 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508638
-H> 0 2 48
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-H< 0 2 48
-H- 0 2 48 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508893
-H> 0 2 49
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 49
-H- 0 2 49 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508382
-H> 0 2 50
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-H< 0 2 50
-H- 0 2 50 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508893
-H> 0 2 51
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-H< 0 2 51
-H- 0 2 51 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508376
-H> 0 2 52
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 52
-H- 0 2 52 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508905
-H> 0 2 53
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 53
-H- 0 2 53 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508717
-H> 0 2 54
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 54
-H- 0 2 54 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508376
-H> 0 2 55
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 55
-H- 0 2 55 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508626
-H> 0 2 56
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 2 ? 0
-AppendEntries: 0 ? 1
-H< 0 2 56
-H- 0 2 56 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508933
-H> 0 2 57
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-AppendEntries: 0 ? 2
-H< 0 2 57
-H- 0 2 57 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508302
-H> 0 2 58
-AppendEntries: 0 > 1
-AppendEntries: 0 > 2
-AppendEntries: 0 ? 1
-H< 0 2 58
-H- 0 2 58 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0505002
-H> 0 2 59
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-AppendEntries: 2 ? 1
-H< 0 2 59
-H- 0 2 59 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508905
-H> 0 2 60
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 60
-H- 0 2 60 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508324
-H> 0 2 61
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 2 ? 1
-H< 0 2 61
-H- 0 2 61 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509525
-H> 0 2 62
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 62
-H- 0 2 62 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.050878
-H> 0 2 63
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-AppendEntries: 2 ? 1
-AppendEntries: 0 ? 2
-H< 0 2 63
-H- 0 2 63 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508296
-H> 0 2 64
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 64
-H- 0 2 64 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508154
-H> 0 2 65
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-AppendEntries: 0 ? 2
-H< 0 2 65
-H- 0 2 65 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508643
-H> 0 2 66
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 2 ? 1
-AppendEntries: 2 ? 0
-AppendEntries: 0 ? 2
-H< 0 2 66
-H- 0 2 66 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.050866
-H> 0 2 67
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-H< 0 2 67
-H- 0 2 67 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508643
-H> 0 2 68
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 68
-H- 0 2 68 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508649
-H> 0 2 69
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H< 0 2 69
-H- 0 2 69 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508643
-H> 0 2 70
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-H< 0 2 70
-H- 0 2 70 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508615
-H> 0 2 71
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-H< 0 2 71
-H- 0 2 71 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508973
-H> 0 2 72
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 72
-H- 0 2 72 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508307
-H> 0 2 73
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-H< 0 2 73
-H- 0 2 73 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518696
-H> 0 2 74
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 74
-H- 0 2 74 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.050862
-H> 0 2 75
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 75
-H- 0 2 75 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0507613
-H> 0 2 76
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-H< 0 2 76
-H- 0 2 76 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508496
-H> 0 2 77
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-H< 0 2 77
-H- 0 2 77 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508501
-H> 0 2 78
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 78
-H- 0 2 78 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509564
-H> 0 2 79
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 79
-H- 0 2 79 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508308
-H> 0 2 80
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 2 ? 0
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H< 0 2 80
-H- 0 2 80 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.050779
-H> 0 2 81
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 81
-H- 0 2 81 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0504359
-H> 0 2 82
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 2 ? 0
-AppendEntries: 0 ? 1
-H< 0 2 82
-H- 0 2 82 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509644
-H> 0 2 83
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-H< 0 2 83
-H- 0 2 83 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0517939
-H> 0 2 84
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-H< 0 2 84
-H- 0 2 84 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508313
-H> 0 2 85
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-AppendEntries: 0 ? 2
-H< 0 2 85
-H- 0 2 85 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508951
-H> 0 2 86
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 86
-H- 0 2 86 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508313
-H> 0 2 87
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-H< 0 2 87
-H- 0 2 87 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509508
-H> 0 2 88
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 88
-H- 0 2 88 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508125
-H> 0 2 89
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 89
-H- 0 2 89 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508296
-H> 0 2 90
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-H< 0 2 90
-H- 0 2 90 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508666
-H> 0 2 91
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 91
-H- 0 2 91 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508723
-H> 0 2 92
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-H< 0 2 92
-H- 0 2 92 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.050854
-H> 0 2 93
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-H< 0 2 93
-H- 0 2 93 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508934
-H> 0 2 94
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 94
-H- 0 2 94 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508336
-H> 0 2 95
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-H< 0 2 95
-H- 0 2 95 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518689
-H> 0 2 96
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-AppendEntries: 2 ? 0
-H< 0 2 96
-H- 0 2 96 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508803
-H> 0 2 97
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 97
-H- 0 2 97 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508779
-H> 0 2 98
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 98
-H- 0 2 98 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508314
-H> 0 2 99
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-RequestVote: 1 ? 0
-AppendEntries: 2 ? 1
-H< 0 2 99
-H- 0 2 99 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508939
-H> 0 2 100
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 100
-H- 0 2 100 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508301
-H> 0 2 101
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 101
-H- 0 2 101 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0500059
-H> 0 2 102
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-H< 0 2 102
-H- 0 2 102 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508666
-H> 0 2 103
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H< 0 2 103
-H- 0 2 103 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0504228
-H> 0 2 104
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 104
-H- 0 2 104 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508314
-H> 0 2 105
-AppendEntries: 0 > 1
-AppendEntries: 0 > 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-H< 0 2 105
-H- 0 2 105 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509007
-H> 0 2 106
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 106
-H- 0 2 106 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.050829
-H> 0 2 107
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-H< 0 2 107
-H- 0 2 107 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508615
-H> 0 2 108
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-H< 0 2 108
-H- 0 2 108 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508671
-H> 0 2 109
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 109
-H- 0 2 109 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509275
-H> 0 2 110
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H< 0 2 110
-H- 0 2 110 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508507
-H> 0 2 111
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 111
-H- 0 2 111 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508865
-H> 0 2 112
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-H< 0 2 112
-H- 0 2 112 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508387
-H> 0 2 113
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 2 ? 0
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-H< 0 2 113
-H- 0 2 113 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508404
-H> 0 2 114
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-RequestVote: 1 ? 2
-1 received votes
-1 → follower | lost vote
-1 x candidate
-H< 0 2 114
-H- 0 2 114 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508518
-H> 0 2 115
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-H< 0 2 115
-H- 0 2 115 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508683
-H> 0 2 116
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 2 ? 0
-H< 0 2 116
-H- 0 2 116 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509041
-H> 0 2 117
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 0 2 117
-H- 0 2 117 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508205
-H> 0 2 118
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H< 0 2 118
-H- 0 2 118 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508951
-H> 0 2 119
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H< 0 2 119
-H- 0 2 119 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508358
-H> 0 2 120
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 0
-H< 0 2 120
-H- 0 2 120 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508621
-H> 0 2 121
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H< 0 2 121
-H- 0 2 121 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508603
-H> 0 2 122
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 122
-H- 0 2 122 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508865
-H> 0 2 123
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-H< 0 2 123
-H- 0 2 123 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508506
-H> 0 2 124
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-H< 0 2 124
-H- 0 2 124 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509173
-H> 0 2 125
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H< 0 2 125
-H- 0 2 125 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508
-H> 0 2 126
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-1 → candidate | timeout
-1 x follower
-1 requested votes | 4
-RequestVote: 1 > 2
-RequestVote: 1 > 0
-2 → follower | tS fail (RequestVote receiver)
-2 - follower | vote interrupt
-2 x candidate
-voter: index 0 term 0 | candidate: index: 0 term: 0
-RequestVote: 1 < 2 | 4 vs 3 | react true | vote: true
-RequestVote: 1 - 2 | 4 vs 3
-1 received votes
-1 → leader | elected (2 votes; term 4)
-H> 1 4 1
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-2 - follower | reset
-H< 0 2 126
-H- 0 2 126 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508649
-H> 0 2 127
-AppendEntries: 0 > 2
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 0 > 1
-AppendEntries: 2 ? 1
-H< 1 4 1
-H- 1 4 1 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508661
-H> 1 4 2
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-2 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-H< 0 2 127
-H- 0 2 127 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518615
-H> 0 2 128
-AppendEntries: 0 > 2
-AppendEntries: 0 > 1
-H< 1 4 2
-H- 1 4 2 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518604
-H> 1 4 3
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-0 → follower | tS fail (AppendEntries receiver)
-AppendEntries: 1 < 0 | 4 vs 2 | react true | success true
-0 - follower | reset
-2 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 1 - 0 | 4 vs 2
-0 x leader (2)
-0 x candidate
-AppendEntries: 0 ? 1
-H< 1 4 3
-H- 1 4 3 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0509303
-H> 1 4 4
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-AppendEntries: 1 < 0 | 4 vs 4 | react true | success true
-0 - follower | reset
-2 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 1 - 0 | 4 vs 4
-RequestVote: 2 ? 0
-AppendEntries: 2 ? 0
-AppendEntries: 0 ? 1
-H< 1 4 4
-H- 1 4 4 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518155
-H> 1 4 5
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-0 - follower | reset
-AppendEntries: 1 < 0 | 4 vs 4 | react true | success true
-2 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 1 - 0 | 4 vs 4
-AppendEntries: 0 ? 1
-H< 1 4 5
-H- 1 4 5 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508455
-H> 1 4 6
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-0 - follower | reset
-2 - follower | reset
-AppendEntries: 1 < 0 | 4 vs 4 | react true | success true
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 1 - 0 | 4 vs 4
-H< 1 4 6
-H- 1 4 6 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518599
-H> 1 4 7
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-AppendEntries: 1 < 0 | 4 vs 4 | react true | success true
-0 - follower | reset
-AppendEntries: 1 - 0 | 4 vs 4
-2 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-H< 1 4 7
-H- 1 4 7 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508626
-H> 1 4 8
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-AppendEntries: 1 < 0 | 4 vs 4 | react true | success true
-2 - follower | reset
-0 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 1 - 0 | 4 vs 4
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-H< 1 4 8
-H- 1 4 8 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0519549
-H> 1 4 9
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 0 | 4 vs 4 | react true | success true
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-AppendEntries: 1 - 0 | 4 vs 4
-0 - follower | reset
-2 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 0 ? 1
-H< 1 4 9
-H- 1 4 9 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0517677
-H> 1 4 10
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-0 - follower | reset
-2 - follower | reset
-AppendEntries: 1 < 0 | 4 vs 4 | react true | success true
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 1 - 0 | 4 vs 4
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-H< 1 4 10
-H- 1 4 10 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508671
-H> 1 4 11
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-AppendEntries: 1 < 0 | 4 vs 4 | react true | success true
-0 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-2 - follower | reset
-AppendEntries: 1 - 0 | 4 vs 4
-AppendEntries: 0 ? 2
-H< 1 4 11
-H- 1 4 11 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0515675
-H> 1 4 12
-AppendEntries: 1 > 0
-AppendEntries: 1 > 2
-AppendEntries: 1 < 0 | 4 vs 4 | react true | success true
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-0 - follower | reset
-2 - follower | reset
-AppendEntries: 1 - 0 | 4 vs 4
-AppendEntries: 1 - 2 | 4 vs 4
-  ... Passed --   8.1  3  352    0
-H< 1 4 12
-H- 1 4 12 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0508643
-H> 1 4 13
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-0 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-H< 1 4 13
-H- 1 4 13 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.050721
-H> 1 4 14
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-2 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-H< 1 4 14
-H- 1 4 14 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518058
-H> 1 4 15
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-2 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-H< 1 4 15
-H- 1 4 15 | next [1 1 1] | match [0 0 0] | commit 0 | log [{0 <nil>}] | time 0.0518342
-H> 1 4 16
-AppendEntries: 1 > 2
-AppendEntries: 1 > 0
-AppendEntries: 1 < 2 | 4 vs 4 | react true | success true
-2 - follower | reset
-AppendEntries: 1 - 2 | 4 vs 4
-AppendEntries: 1 ? 0
-0 [{0 <nil>}] 0
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-1 [{0 <nil>}] 0
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 2
-AppendEntries: 0 ? 1
-AppendEntries: 0 ? 1
-2 [{0 <nil>}] 0
-PASS
-ok  	raft	8.833s
+2018/08/25 23:09:51 apply error: commit index=2 server=0 103 != server=2 102
+exit status 1
+FAIL	raft	1.487s

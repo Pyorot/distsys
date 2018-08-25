@@ -18,13 +18,13 @@ package raft
 //
 
 import (
+	"bytes"
+	"fmt"
+	"labgob"
 	"labrpc"
 	"sync"
 	"time"
 )
-
-// import "bytes"
-// import "labgob"s
 
 // ApplyMsg ...
 // as each Raft peer becomes aware that successive log entries are
@@ -110,12 +110,14 @@ func (rf *Raft) GetState() (term int, isleader bool, loglength int) {
 func (rf *Raft) persist() {
 	// Your code here (2C).
 	// Example:
-	// w := new(bytes.Buffer)
-	// e := labgob.NewEncoder(w)
-	// e.Encode(rf.xxx)
-	// e.Encode(rf.yyy)
-	// data := w.Bytes()
-	// rf.persister.SaveRaftState(data)
+	w := new(bytes.Buffer)
+	e := labgob.NewEncoder(w)
+	e.Encode(rf.currentTerm)
+	e.Encode(rf.votedFor)
+	e.Encode(rf.log)
+	data := w.Bytes()
+	rf.persister.SaveRaftState(data)
+	P(rf.me, "saved")
 }
 
 // readPersist ...
@@ -127,17 +129,20 @@ func (rf *Raft) readPersist(data []byte) {
 	}
 	// Your code here (2C).
 	// Example:
-	// r := bytes.NewBuffer(data)
-	// d := labgob.NewDecoder(r)
-	// var xxx
-	// var yyy
-	// if d.Decode(&xxx) != nil ||
-	//    d.Decode(&yyy) != nil {
-	//   error...
-	// } else {
-	//   rf.xxx = xxx
-	//   rf.yyy = yyy
-	// }
+	r := bytes.NewBuffer(data)
+	d := labgob.NewDecoder(r)
+	var log []LogEntry
+	var votedFor int
+	var currentTerm int
+	if d.Decode(&currentTerm) != nil ||
+		d.Decode(&votedFor) != nil ||
+		d.Decode(&log) != nil {
+		fmt.Println("DECODE ERROR")
+	} else {
+		rf.currentTerm = currentTerm
+		rf.votedFor = votedFor
+		rf.log = log
+	}
 }
 
 // START, KILL, MAKE
@@ -164,6 +169,7 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 	if isLeader { // have lock so can reliably determine index
 		rf.log = append(rf.log, LogEntry{term, command})
 		index = len(rf.log) - 1 // I know Kappa
+		rf.persist()
 		P(rf.me, "input o", term, command)
 	} else {
 		P(rf.me, "input x", command)
@@ -208,11 +214,12 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	// Your initialization code here (2A, 2B, 2C).
 	rf.votedFor = -1
-	rf.phaseChange("follower", false, "init")
 
 	// initialize from state persisted before a crash
 	rf.readPersist(persister.ReadRaftState())
+	P(rf.me, "loaded state | currentTerm=", rf.currentTerm, "| votedFor=", rf.votedFor, "| log=", rf.log)
 
+	rf.phaseChange("follower", false, "init")
 	return rf
 }
 
