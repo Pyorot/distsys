@@ -3,7 +3,7 @@ package raft
 import "fmt"
 
 // Debug ...
-var Debug = 0
+var Debug = 1
 
 // P (DPrintf)
 func P(a ...interface{}) (n int, err error) {
@@ -14,7 +14,7 @@ func P(a ...interface{}) (n int, err error) {
 }
 
 // Debuq ...
-var Debuq = 0
+var Debuq = 1
 
 // Q (DPrintf)
 func Q(a ...interface{}) (n int, err error) {
