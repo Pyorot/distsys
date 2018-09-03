@@ -69,12 +69,8 @@ func (rf *Raft) heartbeat(beatNumber int) {
 		if ID != rf.me {
 			if replies[ID].Success { // implicity times out RPC response
 				rf.nextIndex[ID], rf.matchIndex[ID] = myLastIndex+1, myLastIndex
-			} else if rf.nextIndex[ID] > 1 {
-				if replies[ID].LogLength != 0 && rf.nextIndex[ID] > replies[ID].LogLength {
-					rf.nextIndex[ID] = replies[ID].LogLength
-				} else {
-					rf.nextIndex[ID]--
-				}
+			} else if replies[ID].NextIndex >= 1 {
+				rf.nextIndex[ID] = replies[ID].NextIndex
 			}
 		}
 	}

@@ -16,7 +16,7 @@ type AppendEntriesArgs struct {
 type AppendEntriesReply struct {
 	Term      int
 	Success   bool
-	LogLength int
+	NextIndex int // set only if Success=false
 }
 
 // AppendEntries ...
@@ -30,25 +30,41 @@ func (rf *Raft) AppendEntries(args *AppendEntriesArgs, reply *AppendEntriesReply
 	// payload
 	if react {
 		go func() { electionReset <- true }()
-
 		rf.mu.Lock()
+
 		// 1. set Success, LogLength
-		reply.Success = len(rf.log) > args.PrevLogIndex && rf.log[args.PrevLogIndex].Term == args.PrevLogTerm
-		reply.LogLength = len(rf.log)
+		if args.PrevLogIndex < len(rf.log) {
+			reply.Success = rf.log[args.PrevLogIndex].Term == args.PrevLogTerm
 
-		if reply.Success {
-			// 2. merge log
-			rf.log = append(rf.log[:args.PrevLogIndex+1], args.Entries...)
+			if reply.Success {
+				// 2. merge log
+				rf.log = append(rf.log[:args.PrevLogIndex+1], args.Entries...)
 
-			// 3. update commitIndex
-			newCommitIndex := Min(args.LeaderCommit, len(rf.log)-1)
-			if newCommitIndex > rf.commitIndex {
-				rf.commitIndex = newCommitIndex // has def increased
-				go rf.applyEntries()
+				// 3. update commitIndex
+				newCommitIndex := Min(args.LeaderCommit, len(rf.log)-1)
+				if newCommitIndex > rf.commitIndex {
+					rf.commitIndex = newCommitIndex // has def increased
+					go rf.applyEntries()
+				}
+
+				rf.persist()
+			} else { // PrevLogIndex in bounds but term clash
+				conflictTerm := rf.log[args.PrevLogIndex].Term
+				// ConflictIndex is minimal entry with same term
+				// s.t. every entry from it to PrevLogIndex has same term
+				// – speculating on reverting all entries with that leader
+				reply.NextIndex = args.PrevLogIndex
+				for i := args.PrevLogIndex - 1; i >= 0; i-- {
+					if rf.log[i].Term != conflictTerm {
+						reply.NextIndex = i + 1
+						break
+					}
+				}
 			}
-
-			rf.persist()
+		} else { // PrevLogIndex out-of-bounds
+			reply.NextIndex = len(rf.log)
 		}
+
 		rf.mu.Unlock()
 	}
 	P("AppendEntries:", args.LeaderID, "<", rf.me, "|", otherTerm, "vs", myTerm, "| react", react, "| success", reply.Success)

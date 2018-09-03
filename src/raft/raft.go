@@ -185,11 +185,13 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 // turn off debug output from this instance.
 //
 func (rf *Raft) Kill() {
-	rf.mu.Lock() // to stop Raft instance (can't terminate process between tests)
-	time.Sleep(200 * time.Millisecond)
-	P(rf.me, rf.log, rf.commitIndex)
-	Q(rf.me, "--test clear--")
 	// Your code here, if desired.
+	/*
+		rf.mu.Lock() // to stop Raft instance (can't terminate process between tests)
+		time.Sleep(200 * time.Millisecond)
+		P(rf.me, rf.log, rf.commitIndex)
+		Q(rf.me, "--test clear--")
+	*/
 }
 
 // Make ...
