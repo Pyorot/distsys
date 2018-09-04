@@ -53,11 +53,11 @@ type LogEntry struct {
 	Data interface{}
 }
 
-var steadyElectionTimeout = 500 * time.Millisecond
-var electionTimeout = 0 * time.Millisecond
-var electionRandomisation = 300
-var heartbeatTimeout = 50 * time.Millisecond
+const steadyElectionTimeout = 500 * time.Millisecond
+const electionRandomisation = 300
+const heartbeatTimeout = 50 * time.Millisecond
 
+var electionTimeout = 0 * time.Millisecond
 var electionReset = make(chan bool)
 
 // Raft ...
@@ -185,14 +185,11 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 //
 func (rf *Raft) Kill() {
 	// Your code here, if desired.
+	rf.mu.Lock()
 	rf.phase = "exit"
 	P(rf.me, "x")
-	if 1 == 0 {
-		rf.mu.Lock() // to stop Raft instance (can't terminate process between tests)
-		time.Sleep(200 * time.Millisecond)
-		P(rf.me, rf.log, rf.commitIndex)
-		Q(rf.me, "--test clear--")
-	}
+	time.Sleep(200 * time.Millisecond)
+	rf.mu.Unlock()
 }
 
 // Make ...

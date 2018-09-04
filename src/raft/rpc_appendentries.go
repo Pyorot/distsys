@@ -77,7 +77,7 @@ func (rf *Raft) sendAppendEntries(server int, args *AppendEntriesArgs, reply *Ap
 
 	// await reply here
 	if !ok { // i.e. RPC timeout
-		P("AppendEntries:", rf.me, "?", server)
+		// P("AppendEntries:", rf.me, "?", server)
 		return
 	}
 

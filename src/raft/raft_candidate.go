@@ -19,7 +19,8 @@ func (rf *Raft) callElection() {
 	}
 	// set up vote
 	rf.currentTerm++
-	rf.votedFor = -1 // reset on each new term
+	rf.votedFor = rf.me // reset on each new term
+	rf.persist()
 	args := RequestVoteArgs{
 		Term:         rf.currentTerm,
 		CandidateID:  rf.me,
@@ -33,10 +34,8 @@ func (rf *Raft) callElection() {
 	// request votes via RequestVote RPC
 	replies := make([]RequestVoteReply, len(rf.peers))
 	for ID := 0; ID < len(rf.peers); ID++ {
-		if ID == rf.me && (rf.votedFor == -1 || rf.votedFor == rf.me) {
+		if ID == rf.me {
 			votes <- true
-			rf.votedFor = rf.me
-			rf.persist()
 		} else {
 			go rf.sendRequestVote(ID, &args, &replies[ID], votes)
 		}

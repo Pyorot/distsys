@@ -88,7 +88,7 @@ func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *Reques
 	// await reply here
 	if !ok {
 		doneCh <- false
-		P("RequestVote:", rf.me, "?", server)
+		// P("RequestVote:", rf.me, "?", server)
 		return
 	}
 

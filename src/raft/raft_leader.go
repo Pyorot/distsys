@@ -34,20 +34,18 @@ func (rf *Raft) heartbeat(beatNumber int) {
 	myLastIndex := len(rf.log) - 1 // why is this here?????
 	for ID := 0; ID < len(rf.peers); ID++ {
 		if ID != rf.me {
-			go func(ID int) {
-				nextIndex := rf.nextIndex[ID]
-				args := AppendEntriesArgs{
-					Term:         rf.currentTerm,
-					LeaderID:     rf.me,
-					LeaderCommit: rf.commitIndex,
-					PrevLogIndex: Min(nextIndex, len(rf.log)) - 1, // nextIndex ≥ 1
-				}
-				args.PrevLogTerm = rf.log[args.PrevLogIndex].Term
-				if nextIndex < len(rf.log) {
-					args.Entries = rf.log[nextIndex:]
-				}
-				rf.sendAppendEntries(ID, &args, &replies[ID])
-			}(ID)
+			nextIndex := rf.nextIndex[ID]
+			args := AppendEntriesArgs{
+				Term:         rf.currentTerm,
+				LeaderID:     rf.me,
+				LeaderCommit: rf.commitIndex,
+				PrevLogIndex: Min(nextIndex, len(rf.log)) - 1, // nextIndex ≥ 1
+			}
+			args.PrevLogTerm = rf.log[args.PrevLogIndex].Term
+			if nextIndex < len(rf.log) {
+				args.Entries = rf.log[nextIndex:]
+			}
+			go rf.sendAppendEntries(ID, &args, &replies[ID])
 		}
 	}
 	rf.mu.Unlock()

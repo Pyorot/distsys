@@ -1,10 +1,10 @@
 currentTerm edits:
- – new election (candidate)         x
+ – new election (candidate)         o
  – RPC Term Sync		    during termSync
 
 votedFor edits:
  [the above]
- – candidate voting for self	    o
+ – new election			    o
  – voter voting for someone	    during RequestVote handler
 
 log edits:

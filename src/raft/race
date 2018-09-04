@@ -1,0 +1,84 @@
+==================
+WARNING: DATA RACE
+Read at 0x000000834460 by goroutine 12:
+  raft.(*Raft).awaitElection()
+      C:/Users/Filip Masic/Documents/DS/src/raft/raft_follower.go:21 +0x27b
+  raft.(*Raft).initFollower()
+      C:/Users/Filip Masic/Documents/DS/src/raft/raft_follower.go:9 +0x3f
+  raft.(*Raft).(raft.initFollower)-fm()
+      C:/Users/Filip Masic/Documents/DS/src/raft/raft_common.go:16 +0x48
+
+Previous write at 0x000000834460 by goroutine 9:
+  raft.(*Raft).awaitElection()
+      C:/Users/Filip Masic/Documents/DS/src/raft/raft_follower.go:22 +0x2a3
+  raft.(*Raft).initFollower()
+      C:/Users/Filip Masic/Documents/DS/src/raft/raft_follower.go:9 +0x3f
+  raft.(*Raft).(raft.initFollower)-fm()
+      C:/Users/Filip Masic/Documents/DS/src/raft/raft_common.go:16 +0x48
+
+Goroutine 12 (running) created at:
+  raft.(*Raft).phaseChange()
+      C:/Users/Filip Masic/Documents/DS/src/raft/raft_common.go:32 +0x69b
+  raft.Make()
+      C:/Users/Filip Masic/Documents/DS/src/raft/raft.go:222 +0x526
+  raft.(*config).start1()
+      C:/Users/Filip Masic/Documents/DS/src/raft/config.go:205 +0x904
+  raft.make_config()
+      C:/Users/Filip Masic/Documents/DS/src/raft/config.go:86 +0x672
+  raft.TestInitialElection2A()
+      C:/Users/Filip Masic/Documents/DS/src/raft/test_test.go:24 +0x51
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:777 +0x174
+
+Goroutine 9 (running) created at:
+  raft.(*Raft).phaseChange()
+      C:/Users/Filip Masic/Documents/DS/src/raft/raft_common.go:32 +0x69b
+  raft.Make()
+      C:/Users/Filip Masic/Documents/DS/src/raft/raft.go:222 +0x526
+  raft.(*config).start1()
+      C:/Users/Filip Masic/Documents/DS/src/raft/config.go:205 +0x904
+  raft.make_config()
+      C:/Users/Filip Masic/Documents/DS/src/raft/config.go:86 +0x672
+  raft.TestInitialElection2A()
+      C:/Users/Filip Masic/Documents/DS/src/raft/test_test.go:24 +0x51
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:777 +0x174
+==================
+Test (2A): initial election ...
+--- FAIL: TestInitialElection2A (3.66s)
+	testing.go:730: race detected during execution of test
+Test (2A): election after network failure ...
+  ... Passed --   9.6  3  398    0
+Test (2B): basic agreement ...
+  ... Passed --   1.0  5   32    3
+Test (2B): agreement despite follower disconnection ...
+  ... Passed --   3.7  3  126    7
+Test (2B): no agreement if too many followers disconnect ...
+  ... Passed --   3.8  5  256    4
+Test (2B): concurrent Start()s ...
+  ... Passed --   1.1  3   24    6
+Test (2B): rejoin of partitioned leader ...
+  ... Passed --   6.8  3  340    4
+Test (2B): leader backs up quickly over incorrect follower logs ...
+  ... Passed --  15.7  5 2208  102
+Test (2B): RPC counts aren't too high ...
+  ... Passed --   2.6  3   82   12
+Test (2C): basic persistence ...
+  ... Passed --   5.1  3  162    6
+Test (2C): more persistence ...
+  ... Passed --  20.1  5 1724   16
+Test (2C): partitioned leader and one follower crash, leader restarts ...
+  ... Passed --   2.5  3   46    4
+Test (2C): Figure 8 ...
+  ... Passed --  36.2  5  916   18
+Test (2C): unreliable agreement ...
+  ... Passed --   7.7  5  572  246
+Test (2C): Figure 8 (unreliable) ...
+  ... Passed --  38.9  5 3296  295
+Test (2C): churn ...
+  ... Passed --  16.4  5 1376  338
+Test (2C): unreliable churn ...
+  ... Passed --  17.0  5  512   68
+FAIL
+exit status 1
+FAIL	raft	205.229s
