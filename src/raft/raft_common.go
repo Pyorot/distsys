@@ -18,7 +18,11 @@ func (rf *Raft) phaseChange(toPhase string, sync bool, reason string) (success b
 	}
 	rf.mu.Lock()
 	fromPhase := rf.phase
-	if fromPhase != toPhase {
+	if fromPhase == "exit" { // allows quick exit for testing
+		P(rf.me, "xx")
+		rf.mu.Unlock()
+		return
+	} else if fromPhase != toPhase {
 		rf.phase = toPhase
 		P(rf.me, "→", toPhase, "|", reason)
 		rf.mu.Unlock()

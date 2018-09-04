@@ -90,12 +90,11 @@ type Raft struct {
 // return currentTerm, whether this server
 // believes it is the leader, and length
 // of log (= length of list - 1)
-func (rf *Raft) GetState() (term int, isleader bool, loglength int) {
+func (rf *Raft) GetState() (term int, isleader bool) {
 	// Your code here (2A).
 	rf.mu.Lock()
 	term = rf.currentTerm
 	isleader = rf.phase == "leader"
-	loglength = len(rf.log) - 1
 	rf.mu.Unlock()
 	return
 }
@@ -186,12 +185,14 @@ func (rf *Raft) Start(command interface{}) (index int, term int, isLeader bool) 
 //
 func (rf *Raft) Kill() {
 	// Your code here, if desired.
-	/*
+	rf.phase = "exit"
+	P(rf.me, "x")
+	if 1 == 0 {
 		rf.mu.Lock() // to stop Raft instance (can't terminate process between tests)
 		time.Sleep(200 * time.Millisecond)
 		P(rf.me, rf.log, rf.commitIndex)
 		Q(rf.me, "--test clear--")
-	*/
+	}
 }
 
 // Make ...
