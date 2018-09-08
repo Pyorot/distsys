@@ -65,7 +65,7 @@ func (rf *Raft) heartbeat(beatNumber int) {
 	P("H<", rf.me, rf.currentTerm, beatNumber)
 	for ID := 0; ID < len(rf.peers); ID++ {
 		if ID != rf.me {
-			if replies[ID].Success { // implicity times out RPC response
+			if replies[ID].Success { // implicitly times out RPC response
 				rf.nextIndex[ID], rf.matchIndex[ID] = myLastIndex+1, myLastIndex
 			} else if replies[ID].NextIndex >= 1 {
 				rf.nextIndex[ID] = replies[ID].NextIndex

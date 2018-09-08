@@ -3,6 +3,7 @@ package raft
 import (
 	"math"
 	"strconv"
+	"time"
 )
 
 func (rf *Raft) initCandidate() {
@@ -50,6 +51,10 @@ func (rf *Raft) callElection() {
 			}
 		case <-electionReset: // triggered by newer leader
 			rf.phaseChange("follower", false, "vote interrupt")
+			P(rf.me, "x candidate")
+			return
+		case <-time.After(voteTimeout):
+			rf.phaseChange("follower", false, "vote timeout")
 			P(rf.me, "x candidate")
 			return
 		}

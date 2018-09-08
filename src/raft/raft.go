@@ -53,9 +53,11 @@ type LogEntry struct {
 	Data interface{}
 }
 
-const steadyElectionTimeout = 500 * time.Millisecond
-const electionRandomisation = 300
+const steadyElectionTimeout = 300 * time.Millisecond
+const electionRandomisation = 200
 const heartbeatTimeout = 50 * time.Millisecond
+const voteTimeout = 200 * time.Millisecond
+const exitDelay = 200 * time.Millisecond
 
 var electionTimeout = 0 * time.Millisecond
 var electionReset = make(chan bool)
@@ -188,7 +190,9 @@ func (rf *Raft) Kill() {
 	rf.mu.Lock()
 	rf.phase = "exit"
 	P(rf.me, "x")
-	time.Sleep(200 * time.Millisecond)
+	if rf.me == len(rf.peers)-1 {
+		time.Sleep(exitDelay)
+	}
 	rf.mu.Unlock()
 }
 

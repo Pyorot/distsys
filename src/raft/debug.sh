@@ -1,9 +1,9 @@
 # test=$1
 passes=0
 fails=0
-for ((n=0; n<200; n++))
+for ((n=28; n<100; n++))
 do
-  output=$(go test -count=1)
+  output=$(go test -run TestReElection2A -count=1)
   # output=$(go test -run $test -count=1)
   if (echo "$output" | grep -q FAIL)
   then
